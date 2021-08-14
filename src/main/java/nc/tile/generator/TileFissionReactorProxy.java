@@ -93,7 +93,7 @@ public class TileFissionReactorProxy extends TileEntity implements IEnergyHandle
         if (realTileEntity != null) {
             return realTileEntity.getAccessibleSlotsFromSide(p_94128_1_);
         }
-        return null;
+        return new int[]{};
     }
 
     @Override
