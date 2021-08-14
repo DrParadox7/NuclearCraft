@@ -14,28 +14,28 @@ public class FissionRecipes extends NCRecipeHelper {
 	}
 
 	public void addRecipes() {
-		deplete2("fuelLEU235");
-		deplete2("fuelHEU235");
-		deplete2("fuelLEP239");
-		deplete2("fuelHEP239");
-		deplete("fuelMOX239");
-		deplete2("fuelTBU");
-		deplete2("fuelLEU233");
-		deplete2("fuelHEU233");
-		deplete2("fuelLEP241");
-		deplete2("fuelHEP241");
-		deplete("fuelMOX241");
+		deplete2("LEU235");
+		deplete2("HEU235");
+		deplete2("LEP239");
+		deplete2("HEP239");
+		deplete("MOX239");
+		deplete2("TBU");
+		deplete2("LEU233");
+		deplete2("HEU233");
+		deplete2("LEP241");
+		deplete2("HEP241");
+		deplete("MOX241");
 		
-		deplete2("fuelLEN236");
-		deplete2("fuelHEN236");
-		deplete2("fuelLEA242");
-		deplete2("fuelHEA242");
-		deplete2("fuelLEC243");
-		deplete2("fuelHEC243");
-		deplete2("fuelLEC245");
-		deplete2("fuelHEC245");
-		deplete2("fuelLEC247");
-		deplete2("fuelHEC247");
+		deplete2("LEN236");
+		deplete2("HEN236");
+		deplete2("LEA242");
+		deplete2("HEA242");
+		deplete2("LEC243");
+		deplete2("HEC243");
+		deplete2("LEC245");
+		deplete2("HEC245");
+		deplete2("LEC247");
+		deplete2("HEC247");
 	}
 	
 	public void deplete(String fuel) {
