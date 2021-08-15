@@ -21,14 +21,8 @@ import nc.block.fluid.FluidPlasma;
 import nc.block.fluid.FluidSteam;
 import nc.block.fluid.FluidSuperdenseSteam;
 import nc.block.generator.*;
-import nc.block.machine.BlockAssembler;
 import nc.block.machine.BlockCollector;
 import nc.block.machine.BlockCooler;
-import nc.block.machine.BlockCrusher;
-import nc.block.machine.BlockElectricCrusher;
-import nc.block.machine.BlockElectricFurnace;
-import nc.block.machine.BlockElectrolyser;
-import nc.block.machine.BlockFactory;
 import nc.block.machine.BlockFurnace;
 import nc.block.machine.BlockHastener;
 import nc.block.machine.BlockHeliumExtractor;
@@ -102,14 +96,8 @@ import nc.itemblock.basic.ItemBlockBlock;
 import nc.itemblock.basic.ItemBlockOre;
 import nc.itemblock.crafting.ItemBlockNuclearWorkspace;
 import nc.itemblock.generator.*;
-import nc.itemblock.machine.ItemBlockAssembler;
 import nc.itemblock.machine.ItemBlockCollector;
 import nc.itemblock.machine.ItemBlockCooler;
-import nc.itemblock.machine.ItemBlockCrusher;
-import nc.itemblock.machine.ItemBlockElectricCrusher;
-import nc.itemblock.machine.ItemBlockElectricFurnace;
-import nc.itemblock.machine.ItemBlockElectrolyser;
-import nc.itemblock.machine.ItemBlockFactory;
 import nc.itemblock.machine.ItemBlockFurnace;
 import nc.itemblock.machine.ItemBlockHastener;
 import nc.itemblock.machine.ItemBlockHeliumExtractor;
@@ -139,14 +127,8 @@ import nc.tile.accelerator.TileSupercooler;
 import nc.tile.accelerator.TileSynchrotron;
 import nc.tile.crafting.TileNuclearWorkspace;
 import nc.tile.generator.*;
-import nc.tile.machine.TileAssembler;
 import nc.tile.machine.TileCollector;
 import nc.tile.machine.TileCooler;
-import nc.tile.machine.TileCrusher;
-import nc.tile.machine.TileElectricCrusher;
-import nc.tile.machine.TileElectricFurnace;
-import nc.tile.machine.TileElectrolyser;
-import nc.tile.machine.TileFactory;
 import nc.tile.machine.TileFurnace;
 import nc.tile.machine.TileHastener;
 import nc.tile.machine.TileHeliumExtractor;
@@ -224,9 +206,6 @@ public class NuclearCraft {
 	
 	public static final int guiIdNuclearFurnace = 0;
 	public static final int guiIdFurnace = 1;
-	public static final int guiIdCrusher = 2;
-	public static final int guiIdElectricCrusher = 3;
-	public static final int guiIdElectricFurnace = 4;
 	public static final int guiIdReactionGenerator = 5;
 	public static final int guiIdSeparator = 6;
 	public static final int guiIdHastener = 7;
@@ -234,15 +213,12 @@ public class NuclearCraft {
 	public static final int guiIdNuclearWorkspace = 9;
 	public static final int guiIdCollector = 10;
 	public static final int guiIdFusionReactor = 11;
-	public static final int guiIdElectrolyser = 12;
 	public static final int guiIdOxidiser = 13;
 	public static final int guiIdIoniser = 14;
 	public static final int guiIdIrradiator = 15;
 	public static final int guiIdCooler = 16;
-	public static final int guiIdFactory = 17;
 	public static final int guiIdHeliumExtractor = 18;
 	public static final int guiIdSynchrotron = 19;
-	public static final int guiIdAssembler = 20;
 	public static final int guiIdFissionReactorSteam = 21;
 	public static final int guiIdFusionReactorSteam = 22;
 	public static final int guiIdRecycler = 23;
@@ -305,19 +281,11 @@ public class NuclearCraft {
 	public static int nuclearFurnaceCookEfficiency;
 	public static int metalFurnaceCookSpeed;
 	public static int metalFurnaceCookEfficiency;
-	public static int crusherCrushSpeed;
-	public static int crusherCrushEfficiency;
-	public static int electricCrusherCrushSpeed;
-	public static int electricCrusherCrushEfficiency;
-	public static int electricFurnaceSmeltSpeed;
-	public static int electricFurnaceSmeltEfficiency;
 	public static int separatorSpeed;
 	public static int separatorEfficiency;
 	public static int hastenerSpeed;
 	public static int hastenerEfficiency;
 	public static int collectorSpeed;
-	public static int electrolyserSpeed;
-	public static int electrolyserEfficiency;
 	public static int oxidiserSpeed;
 	public static int oxidiserEfficiency;
 	public static int ioniserSpeed;
@@ -326,12 +294,8 @@ public class NuclearCraft {
 	public static int irradiatorEfficiency;
 	public static int coolerSpeed;
 	public static int coolerEfficiency;
-	public static int factorySpeed;
-	public static int factoryEfficiency;
 	public static int heliumExtractorSpeed;
 	public static int heliumExtractorEfficiency;
-	public static int assemblerSpeed;
-	public static int assemblerEfficiency;
 	public static int recyclerSpeed;
 	public static int recyclerEfficiency;
 	public static int reactionGeneratorRF;
@@ -623,20 +587,20 @@ public class NuclearCraft {
 	public static Achievements achievements;
 	
 	public static Achievement nuclearFurnaceAchievement;
-	public static Achievement dominosAchievement;
-	public static Achievement fishAndRicecakeAchievement;
+	//public static Achievement dominosAchievement;
+	//public static Achievement fishAndRicecakeAchievement;
 	public static Achievement heavyDutyWorkspaceAchievement;
 	public static Achievement nukeAchievement;
-	public static Achievement toolAchievement;
+	//public static Achievement toolAchievement;
 	public static Achievement reactionGeneratorAchievement;
 	public static Achievement fissionControllerAchievement;
 	public static Achievement RTGAchievement;
 	public static Achievement fusionReactorAchievement;
-	public static Achievement factoryAchievement;
+	//public static Achievement factoryAchievement;
 	public static Achievement separatorAchievement;
-	public static Achievement pistolAchievement;
-	public static Achievement solarAchievement;
-	public static Achievement oxidiserAchievement;
+	//public static Achievement pistolAchievement;
+	//public static Achievement solarAchievement;
+	//public static Achievement oxidiserAchievement;
 	public static Achievement synchrotronAchievement;
 	public static Achievement antimatterBombAchievement;
 	
@@ -705,16 +669,10 @@ public class NuclearCraft {
 		
 		liquidHeliumLakeGen = config.getInt("Liquid Helium Gen Rate in End", "0.10: World Gen", 0, 0, 10, "");
 
-		electricCrusherCrushSpeed = config.getInt("Electic Crusher Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
-		electricCrusherCrushEfficiency = config.getInt("Electic Crusher Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
-		electricFurnaceSmeltSpeed = config.getInt("Electic Furnace Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
-		electricFurnaceSmeltEfficiency = config.getInt("Electic Furnace Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		separatorSpeed = config.getInt("Isotope Separator Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		separatorEfficiency = config.getInt("Isotope Separator Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		hastenerSpeed = config.getInt("Decay Hastener Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		hastenerEfficiency = config.getInt("Decay Hastener Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
-		electrolyserSpeed = config.getInt("Electrolyser Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
-		electrolyserEfficiency = config.getInt("Electrolyser Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		oxidiserSpeed = config.getInt("Oxidiser Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		oxidiserEfficiency = config.getInt("Oxidiser Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		ioniserSpeed = config.getInt("Ioniser Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
@@ -723,12 +681,8 @@ public class NuclearCraft {
 		irradiatorEfficiency = config.getInt("Neutron Irradiator Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		coolerSpeed = config.getInt("Supercooler Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		coolerEfficiency = config.getInt("Supercooler Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
-		factorySpeed = config.getInt("Manufactory Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
-		factoryEfficiency = config.getInt("Manufactory Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		heliumExtractorSpeed = config.getInt("Helium Extractor Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		heliumExtractorEfficiency = config.getInt("Helium Extractor Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
-		assemblerSpeed = config.getInt("Assembler Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
-		assemblerEfficiency = config.getInt("Assembler Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		recyclerSpeed = config.getInt("Fuel Recycler Speed Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		recyclerEfficiency = config.getInt("Fuel Recycler Efficiency Multiplier", "1.0: RF Machines", 100, 10, 1000, "");
 		reactionGeneratorRF = config.getInt("Reaction Generator RF/t", "1.1: RF Generators", 100, 10, 1000, "");
@@ -742,8 +696,6 @@ public class NuclearCraft {
 		nuclearFurnaceCookEfficiency = config.getInt("Nuclear Furnace Fuel Usage Multiplier", "1.2: Non-RF Machines", 100, 10, 1000, "");
 		metalFurnaceCookSpeed = config.getInt("Metal Furnace Speed Multiplier", "1.2: Non-RF Machines", 100, 10, 1000, "");
 		metalFurnaceCookEfficiency = config.getInt("Metal Furnace Fuel Usage Multiplier", "1.2: Non-RF Machines", 100, 10, 1000, "");
-		crusherCrushSpeed = config.getInt("Crusher Speed Multiplier", "1.2: Non-RF Machines", 100, 10, 1000, "");
-		crusherCrushEfficiency = config.getInt("Crusher Fuel Usage Multiplier", "1.2: Non-RF Machines", 100, 10, 1000, "");
 		collectorSpeed = config.getInt("Helium Collector Speed Multiplier", "1.2: Non-RF Machines", 100, 10, 1000, "");
 		lithiumIonRF = config.getInt("Lithium Ion Battery RF", "1.3: RF Storage", 10000000, 1, 100000000, "");
 		voltaicPileRF = config.getInt("Voltaic Pile RF", "1.3: RF Storage", 1000000, 1, 100000000, "");
@@ -1141,18 +1093,6 @@ public class NuclearCraft {
 		GameRegistry.registerBlock(NCBlocks.furnaceIdle, ItemBlockFurnace.class, "furnaceIdle");
 		NCBlocks.furnaceActive = new BlockFurnace(true).setBlockName("furnaceActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
 		GameRegistry.registerBlock(NCBlocks.furnaceActive, ItemBlockFurnace.class, "furnaceActive");
-		NCBlocks.crusherIdle = new BlockCrusher(false).setBlockName("crusherIdle").setCreativeTab(tabNC).setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.crusherIdle, ItemBlockCrusher.class, "crusherIdle");
-		NCBlocks.crusherActive = new BlockCrusher(true).setBlockName("crusherActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.crusherActive, ItemBlockCrusher.class, "crusherActive");
-		NCBlocks.electricCrusherIdle = new BlockElectricCrusher(false).setBlockName("electricCrusherIdle").setCreativeTab(tabNC).setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.electricCrusherIdle, ItemBlockElectricCrusher.class, "electricCrusherIdle");
-		NCBlocks.electricCrusherActive = new BlockElectricCrusher(true).setBlockName("electricCrusherActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.electricCrusherActive, ItemBlockElectricCrusher.class, "electricCrusherActive");
-		NCBlocks.electricFurnaceIdle = new BlockElectricFurnace(false).setBlockName("electricFurnaceIdle").setCreativeTab(tabNC).setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.electricFurnaceIdle, ItemBlockElectricFurnace.class, "electricFurnaceIdle");
-		NCBlocks.electricFurnaceActive = new BlockElectricFurnace(true).setBlockName("electricFurnaceActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.electricFurnaceActive, ItemBlockElectricFurnace.class, "electricFurnaceActive");
 		
 		NCBlocks.reactionGeneratorIdle = new BlockReactionGenerator(false).setBlockName("reactionGeneratorIdle").setCreativeTab(tabNC).setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
 		GameRegistry.registerBlock(NCBlocks.reactionGeneratorIdle, ItemBlockReactionGenerator.class, "reactionGeneratorIdle");
@@ -1196,10 +1136,6 @@ public class NuclearCraft {
 		GameRegistry.registerBlock(NCBlocks.hastenerIdle, ItemBlockHastener.class, "hastenerIdle");
 		NCBlocks.hastenerActive = new BlockHastener(true).setBlockName("hastenerActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
 		GameRegistry.registerBlock(NCBlocks.hastenerActive, ItemBlockHastener.class, "hastenerActive");
-		NCBlocks.electrolyserIdle = new BlockElectrolyser(false).setBlockName("electrolyserIdle").setCreativeTab(tabNC).setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.electrolyserIdle, ItemBlockElectrolyser.class, "electrolyserIdle");
-		NCBlocks.electrolyserActive = new BlockElectrolyser(true).setBlockName("electrolyserActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.electrolyserActive, ItemBlockElectrolyser.class, "electrolyserActive");
 		
 		NCBlocks.collectorIdle = new BlockCollector(false).setBlockName("collectorIdle").setCreativeTab(tabNC).setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
 		GameRegistry.registerBlock(NCBlocks.collectorIdle, ItemBlockCollector.class, "collectorIdle");
@@ -1221,18 +1157,10 @@ public class NuclearCraft {
 		GameRegistry.registerBlock(NCBlocks.coolerIdle, ItemBlockCooler.class, "coolerIdle");
 		NCBlocks.coolerActive = new BlockCooler(true).setBlockName("coolerActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
 		GameRegistry.registerBlock(NCBlocks.coolerActive, ItemBlockCooler.class, "coolerActive");
-		NCBlocks.factoryIdle = new BlockFactory(false).setBlockName("factoryIdle").setCreativeTab(tabNC).setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.factoryIdle, ItemBlockFactory.class, "factoryIdle");
-		NCBlocks.factoryActive = new BlockFactory(true).setBlockName("factoryActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.factoryActive, ItemBlockFactory.class, "factoryActive");
 		NCBlocks.heliumExtractorIdle = new BlockHeliumExtractor(false).setBlockName("heliumExtractorIdle").setCreativeTab(tabNC).setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
 		GameRegistry.registerBlock(NCBlocks.heliumExtractorIdle, ItemBlockHeliumExtractor.class, "heliumExtractorIdle");
 		NCBlocks.heliumExtractorActive = new BlockHeliumExtractor(true).setBlockName("heliumExtractorActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
 		GameRegistry.registerBlock(NCBlocks.heliumExtractorActive, ItemBlockHeliumExtractor.class, "heliumExtractorActive");
-		NCBlocks.assemblerIdle = new BlockAssembler(false).setBlockName("assemblerIdle").setCreativeTab(tabNC).setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.assemblerIdle, ItemBlockAssembler.class, "assemblerIdle");
-		NCBlocks.assemblerActive = new BlockAssembler(true).setBlockName("assemblerActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
-		GameRegistry.registerBlock(NCBlocks.assemblerActive, ItemBlockAssembler.class, "assemblerActive");
 		NCBlocks.recyclerIdle = new BlockRecycler(false).setBlockName("recyclerIdle").setCreativeTab(tabNC).setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
 		GameRegistry.registerBlock(NCBlocks.recyclerIdle, ItemBlockRecycler.class, "recyclerIdle");
 		NCBlocks.recyclerActive = new BlockRecycler(true).setBlockName("recyclerActive").setStepSound(Block.soundTypeMetal).setResistance(20.0F).setHardness(5.0F);
@@ -1263,14 +1191,10 @@ public class NuclearCraft {
 			// Tile Entity
 		GameRegistry.registerTileEntity(TileNuclearFurnace.class, "nuclearFurnaceNC");
 		GameRegistry.registerTileEntity(TileFurnace.class, "furnaceNC");
-		GameRegistry.registerTileEntity(TileCrusher.class, "crusherNC");
-		GameRegistry.registerTileEntity(TileElectricCrusher.class, "electricCrusherNC");
-		GameRegistry.registerTileEntity(TileElectricFurnace.class, "electricFurnaceNC");
 		GameRegistry.registerTileEntity(TileReactionGenerator.class, "reactionGeneratorNC");
 		GameRegistry.registerTileEntity(TileSeparator.class, "separatorNC");
 		GameRegistry.registerTileEntity(TileHastener.class, "hastenerNC");
 		GameRegistry.registerTileEntity(TileCollector.class, "collectorNC");
-		GameRegistry.registerTileEntity(TileElectrolyser.class, "electrolyserNC");
 		GameRegistry.registerTileEntity(TileFissionReactor.class, "fissionReactorGraphiteNC");
 		GameRegistry.registerTileEntity(TileFissionReactorProxy.class, "fissionReactorEnergyProxyNC");
 		GameRegistry.registerTileEntity(TileFissionReactorSteam.class, "fissionReactorSteamNC");
@@ -1294,8 +1218,6 @@ public class NuclearCraft {
 		GameRegistry.registerTileEntity(TileIoniser.class, "ioniserNC");
 		GameRegistry.registerTileEntity(TileIrradiator.class, "irradiatorNC");
 		GameRegistry.registerTileEntity(TileCooler.class, "coolerNC");
-		GameRegistry.registerTileEntity(TileAssembler.class, "assemblerNC");
-		GameRegistry.registerTileEntity(TileFactory.class, "factoryNC");
 		GameRegistry.registerTileEntity(TileHeliumExtractor.class, "heliumExtractorNC");
 		GameRegistry.registerTileEntity(TileRecycler.class, "recyclerNC");
 		GameRegistry.registerTileEntity(TileSolarPanel.class, "solarPanelNC");
@@ -1527,12 +1449,7 @@ public class NuclearCraft {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 16, 6), true, new Object[] {"III", "IBI", "III", 'I', "ingotTin", 'B', "blockTin"}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.nuclearFurnaceIdle, true, new Object[] {"XPX", "PFP", "XPX", 'P', "plateBasic", 'X', "dustObsidian", 'F', Blocks.furnace}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.furnaceIdle, true, new Object[] {"PPP", "PXP", "PPP", 'P', "platingIron", 'X', Blocks.furnace}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.crusherIdle, true, new Object[] {"PPP", "PCP", "PPP", 'P', "platingIron", 'C', new ItemStack(NCItems.parts, 1, 2)}));
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.electricFurnaceIdle, true, new Object[] {"PRP", "RCR", "PRP", 'P', "platingIron", 'R', new ItemStack(NCItems.parts, 1, 12), 'C', NCBlocks.furnaceIdle}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.electricCrusherIdle, true, new Object[] {"PRP", "RCR", "PRP", 'P', "platingIron", 'R', new ItemStack(NCItems.parts, 1, 12), 'C', NCBlocks.crusherIdle}));
-		
+	
 		if (workspace) GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.nuclearWorkspace, true, new Object[] {"NNN", " T ", "TTT", 'N', "plateBasic", 'T', "ingotTough"}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.graphiteBlock, true, new Object[] {"CDC", "DCD", "CDC", 'D', "dustCoal", 'C', Items.coal}));
@@ -1738,13 +1655,10 @@ public class NuclearCraft {
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.hastenerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "platingLead", 'B', "universalReactant", 'C', "ingotTough", 'D', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.collectorIdle, true, new Object[] {"ABA", "BBB", "ABA", 'A', "plateBasic", 'B', new ItemStack(NCItems.material, 1, 40)}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.reactionGeneratorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "platingLead", 'B', new ItemStack(NCItems.parts, 1, 5), 'C', "plateBasic", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.electrolyserIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateReinforced", 'B', new ItemStack(NCItems.parts, 1, 7), 'C', "universalReactant", 'D', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.oxidiserIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "universalReactant", 'C', "platingLead", 'D', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.ioniserIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "dustRedstone", 'C', "platingLead", 'D', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.irradiatorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "universalReactant", 'C', "ingotTough", 'D', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.coolerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "universalReactant", 'C', "plateBasic", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.factoryIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "ingotTough", 'B', "plateBasic", 'C', "platingIron", 'D', Blocks.piston}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.assemblerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "ingotTough", 'B', "platingIron", 'C', "plateBasic", 'D', Blocks.piston}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.heliumExtractorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateReinforced", 'B', new ItemStack(NCItems.parts, 1, 5), 'C', "platingTin", 'D', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.electromagnetIdle, 2), true, new Object[] {"AAA", "BCB", "AAA", 'A', "plateReinforced", 'B', new ItemStack(NCItems.parts, 1, 12), 'C', "ingotIron"}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.fusionReactor, true, new Object[] {"ABA", "BCB", "ABA", 'A', NCBlocks.reactionGeneratorIdle, 'B', "plateAdvanced", 'C', NCBlocks.electromagnetIdle}));
@@ -2224,9 +2138,6 @@ public class NuclearCraft {
 		// Inter Mod Comms - AE2
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileNuclearFurnace.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileFurnace.class.getCanonicalName());
-		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileCrusher.class.getCanonicalName());
-		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileElectricCrusher.class.getCanonicalName());
-		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileElectricFurnace.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileReactionGenerator.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileSeparator.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileHastener.class.getCanonicalName());
@@ -2249,13 +2160,10 @@ public class NuclearCraft {
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileFusionReactorBlockTop.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileFusionReactorSteamBlock.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileFusionReactorSteamBlockTop.class.getCanonicalName());
-		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileElectrolyser.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileOxidiser.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileIoniser.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileIrradiator.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileCooler.class.getCanonicalName());
-		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileFactory.class.getCanonicalName());
-		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileAssembler.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileHeliumExtractor.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileRecycler.class.getCanonicalName());
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileSolarPanel.class.getCanonicalName());
@@ -2757,15 +2665,14 @@ public class NuclearCraft {
 		nukeAchievement = a("nuke", -2, -2, NCBlocks.nukeE, workspace ? heavyDutyWorkspaceAchievement : null);
 		//toolAchievement = a("tool", 2, -2, NCItems.dUPaxel, workspace ? heavyDutyWorkspaceAchievement : null);
 		reactionGeneratorAchievement = a("reactionGenerator", -2, 0, NCBlocks.reactionGeneratorIdle, workspace ? heavyDutyWorkspaceAchievement : null);
-		factoryAchievement = a("factory", 0, 2, NCBlocks.factoryIdle, workspace ? heavyDutyWorkspaceAchievement : null);
-		fissionControllerAchievement = a("fissionController", 2, 2, NCBlocks.fissionReactorGraphiteIdle, factoryAchievement);
+		fissionControllerAchievement = a("fissionController", 2, 2, NCBlocks.fissionReactorGraphiteIdle, null);
 		RTGAchievement = a("RTG", 2, 0, NCBlocks.RTG, fissionControllerAchievement);
 		fusionReactorAchievement = a("fusionReactor", 4, 2, NCBlocks.fusionReactor, fissionControllerAchievement);
-		separatorAchievement = a("separator", -2, 2, NCBlocks.separatorIdle, factoryAchievement);
-		oxidiserAchievement = a("oxidiser", -4, 4, NCBlocks.oxidiserIdle, separatorAchievement);
+		separatorAchievement = a("separator", -2, 2, NCBlocks.separatorIdle, null);
+		//oxidiserAchievement = a("oxidiser", -4, 4, NCBlocks.oxidiserIdle, separatorAchievement);
 		//pistolAchievement = a("pistol", -4, 2, NCItems.pistol, separatorAchievement);
-		solarAchievement = a("solar", 2, 4, NCBlocks.solarPanel, factoryAchievement);
-		synchrotronAchievement = a("synchrotron", 4, 6, NCBlocks.synchrotronIdle, factoryAchievement);
+		//solarAchievement = a("solar", 2, 4, NCBlocks.solarPanel);
+		synchrotronAchievement = a("synchrotron", 4, 6, NCBlocks.synchrotronIdle, null);
 		synchrotronAchievement = a("antimatterBomb", 4, 8, NCBlocks.antimatterBombE, synchrotronAchievement);
 	}
 	

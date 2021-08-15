@@ -10,12 +10,6 @@ public class NCBlocks {
 	public static Block nuclearFurnaceActive;
 	public static Block furnaceIdle;
 	public static Block furnaceActive;
-	public static Block crusherIdle;
-	public static Block crusherActive;
-	public static Block electricCrusherIdle;
-	public static Block electricCrusherActive;
-	public static Block electricFurnaceIdle;
-	public static Block electricFurnaceActive;
 	public static Block reactionGeneratorIdle;
 	public static Block reactionGeneratorActive;
 	public static Block separatorIdle;
@@ -64,8 +58,6 @@ public class NCBlocks {
 	public static Block antimatterBombE;
 	public static Block EMP;
 	public static Block EMPE;
-	public static Block electrolyserIdle;
-	public static Block electrolyserActive;
 	public static Block oxidiserIdle;
 	public static Block oxidiserActive;
 	public static Block ioniserIdle;
@@ -74,10 +66,6 @@ public class NCBlocks {
 	public static Block irradiatorActive;
 	public static Block coolerIdle;
 	public static Block coolerActive;
-	public static Block factoryIdle;
-	public static Block factoryActive;
-	public static Block assemblerIdle;
-	public static Block assemblerActive;
 	public static Block heliumExtractorIdle;
 	public static Block heliumExtractorActive;
 	public static Block recyclerIdle;

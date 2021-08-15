@@ -8,14 +8,8 @@ import nc.container.generator.ContainerFissionReactorSteam;
 import nc.container.generator.ContainerFusionReactor;
 import nc.container.generator.ContainerFusionReactorSteam;
 import nc.container.generator.ContainerReactionGenerator;
-import nc.container.machine.ContainerAssembler;
 import nc.container.machine.ContainerCollector;
 import nc.container.machine.ContainerCooler;
-import nc.container.machine.ContainerCrusher;
-import nc.container.machine.ContainerElectricCrusher;
-import nc.container.machine.ContainerElectricFurnace;
-import nc.container.machine.ContainerElectrolyser;
-import nc.container.machine.ContainerFactory;
 import nc.container.machine.ContainerFurnace;
 import nc.container.machine.ContainerHastener;
 import nc.container.machine.ContainerHeliumExtractor;
@@ -32,14 +26,8 @@ import nc.gui.generator.GuiFissionReactorSteam;
 import nc.gui.generator.GuiFusionReactor;
 import nc.gui.generator.GuiFusionReactorSteam;
 import nc.gui.generator.GuiReactionGenerator;
-import nc.gui.machine.GuiAssembler;
 import nc.gui.machine.GuiCollector;
 import nc.gui.machine.GuiCooler;
-import nc.gui.machine.GuiCrusher;
-import nc.gui.machine.GuiElectricCrusher;
-import nc.gui.machine.GuiElectricFurnace;
-import nc.gui.machine.GuiElectrolyser;
-import nc.gui.machine.GuiFactory;
 import nc.gui.machine.GuiFurnace;
 import nc.gui.machine.GuiHastener;
 import nc.gui.machine.GuiHeliumExtractor;
@@ -56,14 +44,8 @@ import nc.tile.generator.TileFissionReactorSteam;
 import nc.tile.generator.TileFusionReactor;
 import nc.tile.generator.TileFusionReactorSteam;
 import nc.tile.generator.TileReactionGenerator;
-import nc.tile.machine.TileAssembler;
 import nc.tile.machine.TileCollector;
 import nc.tile.machine.TileCooler;
-import nc.tile.machine.TileCrusher;
-import nc.tile.machine.TileElectricCrusher;
-import nc.tile.machine.TileElectricFurnace;
-import nc.tile.machine.TileElectrolyser;
-import nc.tile.machine.TileFactory;
 import nc.tile.machine.TileFurnace;
 import nc.tile.machine.TileHastener;
 import nc.tile.machine.TileHeliumExtractor;
@@ -96,15 +78,6 @@ public class GuiHandler implements IGuiHandler {
 				case 1:
 					if(entity instanceof TileFurnace) return new ContainerFurnace(player.inventory, (TileFurnace) entity);
 					return null;
-				case 2:
-					if(entity instanceof TileCrusher) return new ContainerCrusher(player.inventory, (TileCrusher) entity);
-					return null;
-				case 3:
-					if(entity instanceof TileElectricCrusher) return new ContainerElectricCrusher(player.inventory, (TileElectricCrusher) entity);
-					return null;
-				case 4:
-					if(entity instanceof TileElectricFurnace) return new ContainerElectricFurnace(player.inventory, (TileElectricFurnace) entity);
-					return null;
 				case 5:
 					if(entity instanceof TileReactionGenerator) return new ContainerReactionGenerator(player.inventory, (TileReactionGenerator) entity);
 					return null;
@@ -126,9 +99,6 @@ public class GuiHandler implements IGuiHandler {
 				case 11:
 					if(entity instanceof TileFusionReactor) return new ContainerFusionReactor(player.inventory, (TileFusionReactor) entity);
 					return null;
-				case 12:
-					if(entity instanceof TileElectrolyser) return new ContainerElectrolyser(player.inventory, (TileElectrolyser) entity);
-					return null;
 				case 13:
 					if(entity instanceof TileOxidiser) return new ContainerOxidiser(player.inventory, (TileOxidiser) entity);
 					return null;
@@ -141,17 +111,11 @@ public class GuiHandler implements IGuiHandler {
 				case 16:
 					if(entity instanceof TileCooler) return new ContainerCooler(player.inventory, (TileCooler) entity);
 					return null;
-				case 17:
-					if(entity instanceof TileFactory) return new ContainerFactory(player.inventory, (TileFactory) entity);
-					return null;
 				case 18:
 					if(entity instanceof TileHeliumExtractor) return new ContainerHeliumExtractor(player.inventory, (TileHeliumExtractor) entity);
 					return null;
 				case 19:
 					if(entity instanceof TileSynchrotron) return new ContainerSynchrotron(player.inventory, (TileSynchrotron) entity);
-					return null;
-				case 20:
-					if(entity instanceof TileAssembler) return new ContainerAssembler(player.inventory, (TileAssembler) entity);
 					return null;
 				case 21:
 					if(entity instanceof TileFissionReactorSteam) return new ContainerFissionReactorSteam(player.inventory, (TileFissionReactorSteam) entity);
@@ -177,15 +141,6 @@ public class GuiHandler implements IGuiHandler {
 				case 1:
 					if(entity instanceof TileFurnace) return new GuiFurnace(player.inventory, (TileFurnace) entity);
 					return null;
-				case 2:
-					if(entity instanceof TileCrusher) return new GuiCrusher(player.inventory, (TileCrusher) entity);
-					return null;
-				case 3:
-					if(entity instanceof TileElectricCrusher) return new GuiElectricCrusher(player.inventory, (TileElectricCrusher) entity);
-					return null;
-				case 4:
-					if(entity instanceof TileElectricFurnace) return new GuiElectricFurnace(player.inventory, (TileElectricFurnace) entity);
-					return null;
 				case 5:
 					if(entity instanceof TileReactionGenerator) return new GuiReactionGenerator(player.inventory, (TileReactionGenerator) entity);
 					return null;
@@ -207,9 +162,6 @@ public class GuiHandler implements IGuiHandler {
 				case 11:
 					if(entity instanceof TileFusionReactor) return new GuiFusionReactor(player.inventory, (TileFusionReactor) entity);
 					return null;
-				case 12:
-					if(entity instanceof TileElectrolyser) return new GuiElectrolyser(player.inventory, (TileElectrolyser) entity);
-					return null;
 				case 13:
 					if(entity instanceof TileOxidiser) return new GuiOxidiser(player.inventory, (TileOxidiser) entity);
 					return null;
@@ -222,18 +174,14 @@ public class GuiHandler implements IGuiHandler {
 				case 16:
 					if(entity instanceof TileCooler) return new GuiCooler(player.inventory, (TileCooler) entity);
 					return null;
-				case 17:
-					if(entity instanceof TileFactory) return new GuiFactory(player.inventory, (TileFactory) entity);
-					return null;
+				
 				case 18:
 					if(entity instanceof TileHeliumExtractor) return new GuiHeliumExtractor(player.inventory, (TileHeliumExtractor) entity);
 					return null;
 				case 19:
 					if(entity instanceof TileSynchrotron) return new GuiSynchrotron(player.inventory, (TileSynchrotron) entity);
 					return null;
-				case 20:
-					if(entity instanceof TileAssembler) return new GuiAssembler(player.inventory, (TileAssembler) entity);
-					return null;
+				
 				case 21:
 					if(entity instanceof TileFissionReactorSteam) return new GuiFissionReactorSteam(player.inventory, (TileFissionReactorSteam) entity);
 					return null;

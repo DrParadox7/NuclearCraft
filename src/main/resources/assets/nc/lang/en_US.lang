@@ -94,7 +94,7 @@ tile.fissionReactorGraphiteIdle.name=Fission Controller
 tile.fissionReactorGraphiteActive.name=Fission Controller
 tile.fissionReactorSteamIdle.name=Steam Fission Controller
 tile.fissionReactorSteamActive.name=Steam Fission Controller
-tile.fissionReactorProxy.name=Fission Reactor Port
+tile.fissionReactorProxy.name=Reactor Port
 
 tile.nuclearWorkspace.name=Heavy Duty Workspace
 tile.fusionReactor.name=Fusion Reactor Core

@@ -12,7 +12,6 @@ public class PacketHandler {
 	public static final SimpleNetworkWrapper INSTANCE = new SimpleNetworkWrapper("NuclearCraft");
 	
 	public static void init() {
-		INSTANCE.registerMessage(PacketAssemblerState.Handler.class, PacketAssemblerState.class, 0, Side.SERVER);
 		INSTANCE.registerMessage(PacketSideConfig.Handler.class, PacketSideConfig.class, 1, Side.CLIENT);
 	}
 

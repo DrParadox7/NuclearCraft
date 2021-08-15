@@ -3,7 +3,6 @@ package nc.block.machine;
 import java.util.Random;
 
 import nc.NuclearCraft;
-import nc.tile.machine.TileElectricCrusher;
 import nc.tile.machine.TileMachineBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -102,10 +101,6 @@ public abstract class BlockMachine extends BlockContainer {
 			FMLNetworkHandler.openGui(player, NuclearCraft.instance, guiID, world, x, y, z);
 		}
 		return true;
-	}
-	
-	public TileEntity createNewTileEntity(World world, int par1) {
-		return new TileElectricCrusher();
 	}
 	
 	@SideOnly(Side.CLIENT)
