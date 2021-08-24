@@ -1296,17 +1296,17 @@ public class NuclearCraft {
 		//NCItems.toughAlloyPaxel = new NCPaxel(ToughPaxel, "toughAlloyPaxel", "A multitool that can be repaired", "in an Anvil using Tough Alloy.");
 		//GameRegistry.registerItem(NCItems.toughAlloyPaxel, "toughAlloyPaxel");
 		
-		//NCItems.dUPickaxe = new NCPickaxe(dU, "dUPickaxe", "Can be repaired in an Anvil using Depleted Uranium Plating.");
+		//NCItems.dUPickaxe = new NCPickaxe(dU, "dUPickaxe", "Can be repaired in an Anvil using Depleted Uranium plate.");
 		//GameRegistry.registerItem(NCItems.dUPickaxe, "dUPickaxe");
-		//NCItems.dUShovel = new NCShovel(dU, "dUShovel", "Can be repaired in an Anvil using Depleted Uranium Plating.");
+		//NCItems.dUShovel = new NCShovel(dU, "dUShovel", "Can be repaired in an Anvil using Depleted Uranium plate.");
 		//GameRegistry.registerItem(NCItems.dUShovel, "dUShovel");
-		//NCItems.dUAxe = new NCAxe(dU, "dUAxe", "Can be repaired in an Anvil using Depleted Uranium Plating.");
+		//NCItems.dUAxe = new NCAxe(dU, "dUAxe", "Can be repaired in an Anvil using Depleted Uranium plate.");
 		//GameRegistry.registerItem(NCItems.dUAxe, "dUAxe");
-		//NCItems.dUHoe = new NCHoe(dU, "dUHoe", "Can be repaired in an Anvil using Depleted Uranium Plating.");
+		//NCItems.dUHoe = new NCHoe(dU, "dUHoe", "Can be repaired in an Anvil using Depleted Uranium plate.");
 		//GameRegistry.registerItem(NCItems.dUHoe, "dUHoe");
-		//NCItems.dUSword = new NCSword(dU, "dUSword", "Can be repaired in an Anvil using Depleted Uranium Plating.");
+		//NCItems.dUSword = new NCSword(dU, "dUSword", "Can be repaired in an Anvil using Depleted Uranium plate.");
 		//GameRegistry.registerItem(NCItems.dUSword, "dUSword");
-		//NCItems.dUPaxel = new NCPaxel(dUPaxel, "dUPaxel", "A multitool that can be repaired in", "an Anvil using Depleted Uranium Plating.");
+		//NCItems.dUPaxel = new NCPaxel(dUPaxel, "dUPaxel", "A multitool that can be repaired in", "an Anvil using Depleted Uranium plate.");
 		//GameRegistry.registerItem(NCItems.dUPaxel, "dUPaxel");
 		
 		//NCItems.toughBow = new ItemToughBow("toughBow", "A better version of the vanilla bow - it does", "more damage and has a higher durability.", "Can be repaired in an Anvil using Tough Alloy.").setMaxStackSize(1);
@@ -1439,8 +1439,8 @@ public class NuclearCraft {
 		m(124, "tinyCf250Oxide");
 		
 		// Shaped Crafting Recipes
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.fuel, 16, 33), true, new Object[] {" I ", "I I", " I ", 'I', "platingIron"}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.fuel, 16, 45), true, new Object[] {" I ", "I I", " I ", 'I', "platingTin"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.fuel, 16, 33), true, new Object[] {" I ", "I I", " I ", 'I', "plateIron"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.fuel, 16, 45), true, new Object[] {" I ", "I I", " I ", 'I', "plateTin"}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 2, 0), true, new Object[] {"LLL", "CCC", 'L', "ingotLead", 'C', "dustCoal"}));
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 2), true, new Object[] {"FFF", "CCC", "SSS", 'F', Items.flint, 'C', "cobblestone", 'S', Items.stick}));
@@ -1456,8 +1456,8 @@ public class NuclearCraft {
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.fusionConnector, 4), true, new Object[] {"CC", 'C', NCBlocks.electromagnetIdle}));
 		
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.upgradeSpeed, true, new Object[] {"PPP", "PCP", "PPP", 'P', "dustLapis", 'C', "platingIron"}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.upgradeEnergy, true, new Object[] {"PPP", "PCP", "PPP", 'P', "universalReactant", 'C', "platingIron"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.upgradeSpeed, true, new Object[] {"PPP", "PCP", "PPP", 'P', "dustLapis", 'C', "plateIron"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.upgradeEnergy, true, new Object[] {"PPP", "PCP", "PPP", 'P', "universalReactant", 'C', "plateIron"}));
 		
 		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.voltaicPile, true, new Object[] {"PCP", "PMP", 'P', "plateBasic", 'C', "blockCopper", 'M', "blockMagnesium"}));
 	
@@ -1641,25 +1641,25 @@ public class NuclearCraft {
 		
 		// Workspace Recipes
 		if (!workspace) {
-			GameRegistry.addRecipe(new ShapelessOreRecipe(NCBlocks.machineBlock, new Object[] {"plateBasic", "platingLead", "platingLead", new ItemStack(NCItems.parts, 1, 10), new ItemStack(NCItems.parts, 1, 11), new ItemStack(NCItems.parts, 1, 12), new ItemStack(NCItems.parts, 1, 13), new ItemStack(NCItems.parts, 1, 16), "dustRedstone"}));
+			GameRegistry.addRecipe(new ShapelessOreRecipe(NCBlocks.machineBlock, new Object[] {"plateBasic", "plateLead", "plateLead", new ItemStack(NCItems.parts, 1, 10), new ItemStack(NCItems.parts, 1, 11), new ItemStack(NCItems.parts, 1, 12), new ItemStack(NCItems.parts, 1, 13), new ItemStack(NCItems.parts, 1, 16), "dustRedstone"}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.reactorBlock, 8), true, new Object[] {"ABA", "B B", "ABA", 'A', "ingotTough", 'B', "plateBasic"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.cellBlock, 1), true, new Object[] {"ABA", "CDC", "ABA", 'A', "blockGlass", 'B', "plateBasic", 'C', "ingotTough", 'D', "platingLead"}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.cellBlock, 1), true, new Object[] {"ABA", "CDC", "ABA", 'A', "blockGlass", 'B', "plateBasic", 'C', "ingotTough", 'D', "plateLead"}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.emptyCoolerBlock, 8), true, new Object[] {"ABA", "B B", "ABA", 'A', "universalReactant", 'B', "plateBasic"}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.speedBlock, 4), true, new Object[] {"ABA", "BCB", "ABA", 'A', Items.blaze_powder, 'B', "plateBasic", 'C', "dustRedstone"}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.fissionReactorGraphiteIdle, true, new Object[] {"BAB", "ACA", "BAB", 'A', "plateReinforced", 'B', "plateDU", 'C', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.fissionReactorSteamIdle, true, new Object[] {"BAB", "ACA", "BAB", 'A', new ItemStack(NCItems.parts, 1, 7), 'B', "plateAdvanced", 'C', NCBlocks.fissionReactorGraphiteIdle}));
 			GameRegistry.addRecipe(new ShapelessOreRecipe(NCBlocks.blastBlock, new Object[] {NCBlocks.reactorBlock, "oreObsidian"}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 9), true, new Object[] {"AAA", "BCB", "AAA", 'A', new ItemStack(NCItems.material, 1, 48), 'B', "plateDU", 'C', "dustDiamond"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.separatorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "platingLead", 'B', "ingotTough", 'C', "dustRedstone", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.recyclerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "platingLead", 'B', "ingotTough", 'C', "ingotHardCarbon", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.hastenerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "platingLead", 'B', "universalReactant", 'C', "ingotTough", 'D', NCBlocks.machineBlock}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.separatorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateLead", 'B', "ingotTough", 'C', "dustRedstone", 'D', NCBlocks.machineBlock}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.recyclerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateLead", 'B', "ingotTough", 'C', "ingotHardCarbon", 'D', NCBlocks.machineBlock}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.hastenerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateLead", 'B', "universalReactant", 'C', "ingotTough", 'D', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.collectorIdle, true, new Object[] {"ABA", "BBB", "ABA", 'A', "plateBasic", 'B', new ItemStack(NCItems.material, 1, 40)}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.reactionGeneratorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "platingLead", 'B', new ItemStack(NCItems.parts, 1, 5), 'C', "plateBasic", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.oxidiserIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "universalReactant", 'C', "platingLead", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.ioniserIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "dustRedstone", 'C', "platingLead", 'D', NCBlocks.machineBlock}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.reactionGeneratorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateLead", 'B', new ItemStack(NCItems.parts, 1, 5), 'C', "plateBasic", 'D', NCBlocks.machineBlock}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.oxidiserIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "universalReactant", 'C', "plateLead", 'D', NCBlocks.machineBlock}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.ioniserIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "dustRedstone", 'C', "plateLead", 'D', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.irradiatorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "universalReactant", 'C', "ingotTough", 'D', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.coolerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "universalReactant", 'C', "plateBasic", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.heliumExtractorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateReinforced", 'B', new ItemStack(NCItems.parts, 1, 5), 'C', "platingTin", 'D', NCBlocks.machineBlock}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.heliumExtractorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateReinforced", 'B', new ItemStack(NCItems.parts, 1, 5), 'C', "plateTin", 'D', NCBlocks.machineBlock}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.electromagnetIdle, 2), true, new Object[] {"AAA", "BCB", "AAA", 'A', "plateReinforced", 'B', new ItemStack(NCItems.parts, 1, 12), 'C', "ingotIron"}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.fusionReactor, true, new Object[] {"ABA", "BCB", "ABA", 'A', NCBlocks.reactionGeneratorIdle, 'B', "plateAdvanced", 'C', NCBlocks.electromagnetIdle}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.fusionReactorSteam, true, new Object[] {"BAB", "ACA", "BAB", 'A', new ItemStack(NCItems.parts, 1, 7), 'B', "plateAdvanced", 'C', NCBlocks.fusionReactor}));
@@ -1693,9 +1693,9 @@ public class NuclearCraft {
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.RTG, true, new Object[] {"ABA", "BCB", "ABA", 'A', new ItemStack(NCItems.parts, 1, 11), 'B', new ItemStack(NCItems.parts, 1, 15), 'C', new ItemStack(NCItems.fuel, 1, 46)}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.AmRTG, true, new Object[] {"ABA", "BCB", "ABA", 'A', new ItemStack(NCItems.parts, 1, 11), 'B', new ItemStack(NCItems.parts, 1, 15), 'C', new ItemStack(NCItems.fuel, 1, 139)}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.CfRTG, true, new Object[] {"ABA", "BCB", "ABA", 'A', new ItemStack(NCItems.parts, 1, 11), 'B', new ItemStack(NCItems.parts, 1, 15), 'C', new ItemStack(NCItems.fuel, 1, 140)}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.WRTG, true, new Object[] {"ABA", "BBB", "ABA", 'A', "platingLead", 'B', "U238"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.steamGenerator, true, new Object[] {"PCP", "MMM", "PCP", 'P', "platingIron", 'C', new ItemStack(NCItems.parts, 1, 12), 'M', new ItemStack(NCItems.parts, 1, 19)}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.steamDecompressor, true, new Object[] {"PCP", "GMG", "PCP", 'P', "platingIron", 'C', Blocks.piston, 'G', new ItemStack(NCItems.parts, 1, 10), 'M', new ItemStack(NCItems.parts, 1, 19)}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.WRTG, true, new Object[] {"ABA", "BBB", "ABA", 'A', "plateLead", 'B', "U238"}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.steamGenerator, true, new Object[] {"PCP", "MMM", "PCP", 'P', "plateIron", 'C', new ItemStack(NCItems.parts, 1, 12), 'M', new ItemStack(NCItems.parts, 1, 19)}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.steamDecompressor, true, new Object[] {"PCP", "GMG", "PCP", 'P', "plateIron", 'C', Blocks.piston, 'G', new ItemStack(NCItems.parts, 1, 10), 'M', new ItemStack(NCItems.parts, 1, 19)}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.denseSteamDecompressor, true, new Object[] {"PPP", "CCC", "PPP", 'P', "plateAdvanced", 'C', NCBlocks.steamDecompressor}));
 			if (enableNukes) {
 				//GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.nuke, true, new Object[] {"ABA", "BBB", "ABA", 'A', "plateReinforced", 'B', new ItemStack(NCItems.material, 1, 67)}));
@@ -1703,14 +1703,14 @@ public class NuclearCraft {
 				GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.antimatterBomb, true, new Object[] {"AAA", "ABA", "AAA", 'A', NCItems.antimatter, 'B', NCBlocks.superElectromagnetIdle}));
 			}
 			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.solarPanel, true, new Object[] {"DDD", "ECE", "ABA", 'A', new ItemStack(NCItems.parts, 1, 12), 'B', Blocks.iron_block, 'C', "dustCoal", 'D', new ItemStack(NCItems.parts, 1, 15), 'E', "universalReactant"}));
-			//GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.portableEnderChest, true, new Object[] {"ABA", "CDC", "AAA", 'A', Blocks.wool, 'B', Items.string, 'C', "platingLead", 'D', Items.ender_eye}));
+			//GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.portableEnderChest, true, new Object[] {"ABA", "CDC", "AAA", 'A', Blocks.wool, 'B', Items.string, 'C', "plateLead", 'D', Items.ender_eye}));
 			//GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.pistol, true, new Object[] {"AAA", "BBA", "CBA", 'A', "plateReinforced", 'B', "ingotTough", 'C', "plateAdvanced"}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 2, 5), true, new Object[] {"ABA", "B B", "ABA", 'A', "universalReactant", 'B', "plateBasic"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 7), true, new Object[] {"ABA", "B B", "ABA", 'A', "platingTin", 'B', new ItemStack(NCItems.fuel, 1, 34)}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 7), true, new Object[] {"ABA", "B B", "ABA", 'A', "plateTin", 'B', new ItemStack(NCItems.fuel, 1, 34)}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 3), true, new Object[] {" A ", "ABA", " A ", 'A', "ingotTough", 'B', "plateBasic"}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 8), true, new Object[] {"AAA", "BBB", "AAA", 'A', "U238", 'B', "plateReinforced"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.tubing1, 8), true, new Object[] {"AAA", "BBB", "AAA", 'A', "platingLead", 'B', "platingIron"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.tubing2, 8), true, new Object[] {"ABA", "ABA", "ABA", 'A', "platingLead", 'B', "platingIron"}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.tubing1, 8), true, new Object[] {"AAA", "BBB", "AAA", 'A', "plateLead", 'B', "plateIron"}));
+			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.tubing2, 8), true, new Object[] {"ABA", "ABA", "ABA", 'A', "plateLead", 'B', "plateIron"}));
 			//GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.toughBow, true, new Object[] {"BA ", "B A", "BA ", 'A', "ingotTough", 'B', Items.string}));
 			//GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.toughBow, true, new Object[] {" AB", "A B", " AB", 'A', "ingotTough", 'B', Items.string}));
 			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 12, 0), true, new Object[] {"AAA", "BBB", 'A', "ingotTough", 'B', "dustTough"}));
@@ -2031,15 +2031,15 @@ public class NuclearCraft {
 		magnesiumOreEnrichment.setTag("output", new ItemStack(NCItems.material, 2, 51).writeToNBT(new NBTTagCompound()));
 		FMLInterModComms.sendMessage("Mekanism", "EnrichmentChamberRecipe", magnesiumOreEnrichment);
 		
-		NBTTagCompound basicPlatingEnrichment = new NBTTagCompound();
-		basicPlatingEnrichment.setTag("input", new ItemStack(NCItems.parts, workspace ? 4 : 8, 0).writeToNBT(new NBTTagCompound()));
-		basicPlatingEnrichment.setTag("output", new ItemStack(NCItems.parts, 1, 3).writeToNBT(new NBTTagCompound()));
-		FMLInterModComms.sendMessage("Mekanism", "EnrichmentChamberRecipe", basicPlatingEnrichment);
+		NBTTagCompound basicplateEnrichment = new NBTTagCompound();
+		basicplateEnrichment.setTag("input", new ItemStack(NCItems.parts, workspace ? 4 : 8, 0).writeToNBT(new NBTTagCompound()));
+		basicplateEnrichment.setTag("output", new ItemStack(NCItems.parts, 1, 3).writeToNBT(new NBTTagCompound()));
+		FMLInterModComms.sendMessage("Mekanism", "EnrichmentChamberRecipe", basicplateEnrichment);
 		
-		NBTTagCompound ingotToPlatingEnrichment = new NBTTagCompound();
-		ingotToPlatingEnrichment.setTag("input", new ItemStack(NCItems.material, 1, 7).writeToNBT(new NBTTagCompound()));
-		ingotToPlatingEnrichment.setTag("output", new ItemStack(NCItems.parts, 2, 0).writeToNBT(new NBTTagCompound()));
-		FMLInterModComms.sendMessage("Mekanism", "EnrichmentChamberRecipe", ingotToPlatingEnrichment);
+		NBTTagCompound ingotToplateEnrichment = new NBTTagCompound();
+		ingotToplateEnrichment.setTag("input", new ItemStack(NCItems.material, 1, 7).writeToNBT(new NBTTagCompound()));
+		ingotToplateEnrichment.setTag("output", new ItemStack(NCItems.parts, 2, 0).writeToNBT(new NBTTagCompound()));
+		FMLInterModComms.sendMessage("Mekanism", "EnrichmentChamberRecipe", ingotToplateEnrichment);
 		
 		NBTTagCompound uraniumIngotCrushing = new NBTTagCompound();
 		uraniumIngotCrushing.setTag("input", new ItemStack(NCItems.material, 1, 4).writeToNBT(new NBTTagCompound()));
@@ -2294,13 +2294,13 @@ public class NuclearCraft {
 		
 		// Parts Ore Dictionary
 		OreDictionary.registerOre("plateBasic", new ItemStack(NCItems.parts, 1, 0));
-		OreDictionary.registerOre("platingIron", new ItemStack(NCItems.parts, 1, 1));
+		OreDictionary.registerOre("plateIron", new ItemStack(NCItems.parts, 1, 1));
 		OreDictionary.registerOre("plateReinforced", new ItemStack(NCItems.parts, 1, 3));
 		OreDictionary.registerOre("universalReactant", new ItemStack(NCItems.parts, 1, 4));
-		OreDictionary.registerOre("platingTin", new ItemStack(NCItems.parts, 1, 6));
+		OreDictionary.registerOre("plateTin", new ItemStack(NCItems.parts, 1, 6));
 		OreDictionary.registerOre("plateDU", new ItemStack(NCItems.parts, 1, 8));
 		OreDictionary.registerOre("plateAdvanced", new ItemStack(NCItems.parts, 1, 9));
-		OreDictionary.registerOre("platingLead", new ItemStack(NCItems.parts, 1, 14));
+		OreDictionary.registerOre("plateLead", new ItemStack(NCItems.parts, 1, 14));
 		
 		// Fission Fuel Materials Ore Dictionary
 		OreDictionary.registerOre("U238", new ItemStack(NCItems.material, 1, 24));
