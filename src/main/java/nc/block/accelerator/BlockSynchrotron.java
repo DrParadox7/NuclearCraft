@@ -57,11 +57,6 @@ public class BlockSynchrotron extends BlockMachine {
 	
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLivingBase, ItemStack itemstack) {
 		super.onBlockPlacedBy(world, x, y, z, entityLivingBase, itemstack);
-		
-		IChatComponent localIChatComponent;
-    	localIChatComponent = IChatComponent.Serializer.func_150699_a("[{text:\"Use NuclearCraft's NEI info system or click here for help with the mod!\",color:white,italic:false,clickEvent:{action:open_url,value:\"http://minecraft.curseforge.com/projects/nuclearcraft-mod\"}}]");
-
-    	if (world.isRemote) {((ICommandSender) entityLivingBase).addChatMessage(localIChatComponent);}
 	}
 	
 	public static void updateBlockState(boolean active, World worldObj, int xCoord, int yCoord, int zCoord) {
