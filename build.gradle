@@ -2,8 +2,8 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "forge"
-            url = "https://files.minecraftforge.net/maven"
+            name 'central'
+            url 'https://maven.thorfusion.com/artifactory/central/'
         }
         maven {
             name = "sonatype"
@@ -54,11 +54,16 @@ repositories {
         name 'Chisel Repo'
         url "http://maven.tterrag.com/"
     }
+    maven {
+        name 'central'
+        url 'https://maven.thorfusion.com/artifactory/central/'
+    }
 
 }
 
 
 dependencies {
+    compile(group: 'mekanism', name: 'Mekanism-Community-Edition', version: '1.7.10-9.10.24', classifier: 'API')
     compile "codechicken:CodeChickenLib:1.7.10-1.1.3.140:dev"
     compile "codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev"
     compile "codechicken:CodeChickenCore:1.7.10-1.0.7.47:dev"
