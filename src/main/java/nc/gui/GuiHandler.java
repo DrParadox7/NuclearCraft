@@ -16,7 +16,6 @@ import nc.container.machine.ContainerHeliumExtractor;
 import nc.container.machine.ContainerIoniser;
 import nc.container.machine.ContainerIrradiator;
 import nc.container.machine.ContainerNuclearFurnace;
-import nc.container.machine.ContainerOxidiser;
 import nc.container.machine.ContainerRecycler;
 import nc.container.machine.ContainerSeparator;
 import nc.gui.accelerator.GuiSynchrotron;
@@ -34,7 +33,6 @@ import nc.gui.machine.GuiHeliumExtractor;
 import nc.gui.machine.GuiIoniser;
 import nc.gui.machine.GuiIrradiator;
 import nc.gui.machine.GuiNuclearFurnace;
-import nc.gui.machine.GuiOxidiser;
 import nc.gui.machine.GuiRecycler;
 import nc.gui.machine.GuiSeparator;
 import nc.tile.accelerator.TileSynchrotron;
@@ -52,7 +50,6 @@ import nc.tile.machine.TileHeliumExtractor;
 import nc.tile.machine.TileIoniser;
 import nc.tile.machine.TileIrradiator;
 import nc.tile.machine.TileNuclearFurnace;
-import nc.tile.machine.TileOxidiser;
 import nc.tile.machine.TileRecycler;
 import nc.tile.machine.TileSeparator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -98,9 +95,6 @@ public class GuiHandler implements IGuiHandler {
 					return null;
 				case 11:
 					if(entity instanceof TileFusionReactor) return new ContainerFusionReactor(player.inventory, (TileFusionReactor) entity);
-					return null;
-				case 13:
-					if(entity instanceof TileOxidiser) return new ContainerOxidiser(player.inventory, (TileOxidiser) entity);
 					return null;
 				case 14:
 					if(entity instanceof TileIoniser) return new ContainerIoniser(player.inventory, (TileIoniser) entity);
@@ -161,9 +155,6 @@ public class GuiHandler implements IGuiHandler {
 					return null;
 				case 11:
 					if(entity instanceof TileFusionReactor) return new GuiFusionReactor(player.inventory, (TileFusionReactor) entity);
-					return null;
-				case 13:
-					if(entity instanceof TileOxidiser) return new GuiOxidiser(player.inventory, (TileOxidiser) entity);
 					return null;
 				case 14:
 					if(entity instanceof TileIoniser) return new GuiIoniser(player.inventory, (TileIoniser) entity);

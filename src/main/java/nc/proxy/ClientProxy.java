@@ -4,32 +4,23 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import nc.NuclearCraft;
 import nc.block.NCBlocks;
 import nc.entity.EntityAntimatterBombPrimed;
-//import nc.entity.EntityBrian;
-//import nc.entity.EntityBullet;
 import nc.entity.EntityEMPPrimed;
-//import nc.entity.EntityNuclearGrenade;
 import nc.entity.EntityNuclearMonster;
 import nc.entity.EntityNukePrimed;
-//import nc.entity.EntityPaul;
 import nc.item.NCItems;
-//import nc.model.ModelBrian;
 import nc.model.ModelNuclearMonster;
-//import nc.model.ModelPaul;
 import nc.render.ItemRenderFusionReactor;
 import nc.render.ItemRenderFusionReactorSteam;
 import nc.render.ItemRenderNuclearWorkspace;
 import nc.render.ItemRenderTubing1;
 import nc.render.ItemRenderTubing2;
 import nc.render.RenderAntimatterBombPrimed;
-//import nc.render.RenderBrian;
-//import nc.render.RenderBullet;
 import nc.render.RenderEMPPrimed;
 import nc.render.RenderFusionReactor;
 import nc.render.RenderFusionReactorSteam;
 import nc.render.RenderNuclearMonster;
 import nc.render.RenderNuclearWorkspace;
 import nc.render.RenderNukePrimed;
-//import nc.render.RenderPaul;
 import nc.render.RenderTubing1;
 import nc.render.RenderTubing2;
 import nc.tile.crafting.TileNuclearWorkspace;
@@ -53,59 +44,50 @@ public class ClientProxy extends CommonProxy {
 	
 public void registerRenderThings() {
 
-		System.out.println("----------------------------------------------------registering renderstuff");
+	System.out.println("----------------------------------------------------registering renderstuff");
 
-		//connected textures handler
-		ISimpleBlockRenderingHandler connectedTextureHandler = new CTMRenderer(RenderingRegistry.getNextAvailableRenderId());
-		NuclearCraft.connectedRenderID = connectedTextureHandler.getRenderId();
-		RenderingRegistry.registerBlockHandler(connectedTextureHandler);
+	//connected textures handler
+	ISimpleBlockRenderingHandler connectedTextureHandler = new CTMRenderer(RenderingRegistry.getNextAvailableRenderId());
+	NuclearCraft.connectedRenderID = connectedTextureHandler.getRenderId();
+	RenderingRegistry.registerBlockHandler(connectedTextureHandler);
 
-		//Nuclear Workspace
-		TileEntitySpecialRenderer render = new RenderNuclearWorkspace();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileNuclearWorkspace.class, render);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(NCBlocks.nuclearWorkspace), new ItemRenderNuclearWorkspace(render, new TileNuclearWorkspace()));
-		
-		//Fusion Reactor
-		TileEntitySpecialRenderer renderfusion = new RenderFusionReactor();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileFusionReactor.class, renderfusion);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(NCBlocks.fusionReactor), new ItemRenderFusionReactor(renderfusion, new TileFusionReactor()));
-		
-		//Fusion Reactor Steam
-		TileEntitySpecialRenderer renderfusionSteam = new RenderFusionReactorSteam();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileFusionReactorSteam.class, renderfusionSteam);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(NCBlocks.fusionReactorSteam), new ItemRenderFusionReactorSteam(renderfusionSteam, new TileFusionReactorSteam()));
+	//Nuclear Workspace
+	TileEntitySpecialRenderer render = new RenderNuclearWorkspace();
+	ClientRegistry.bindTileEntitySpecialRenderer(TileNuclearWorkspace.class, render);
+	MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(NCBlocks.nuclearWorkspace), new ItemRenderNuclearWorkspace(render, new TileNuclearWorkspace()));
 
-		//Tubing 1
-		TileEntitySpecialRenderer render1 = new RenderTubing1();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileTubing1.class, render1);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(NCBlocks.tubing1), new ItemRenderTubing1(render1, new TileTubing1()));
-				
-		//Tubing 2
-		TileEntitySpecialRenderer render2 = new RenderTubing2();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileTubing2.class, render2);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(NCBlocks.tubing2), new ItemRenderTubing2(render2, new TileTubing2()));
-		
-		//Nuke Primed
-		RenderingRegistry.registerEntityRenderingHandler(EntityNukePrimed.class, new RenderNukePrimed());
-		
-		//EMP Primed
-		RenderingRegistry.registerEntityRenderingHandler(EntityEMPPrimed.class, new RenderEMPPrimed());
-		
-		//Antimatter Bomb Primed
-		RenderingRegistry.registerEntityRenderingHandler(EntityAntimatterBombPrimed.class, new RenderAntimatterBombPrimed());
-		
-		//Entities
-		RenderingRegistry.registerEntityRenderingHandler(EntityNuclearMonster.class, new RenderNuclearMonster(new ModelNuclearMonster(), 0.3F));
-	//	RenderingRegistry.registerEntityRenderingHandler(EntityPaul.class, new RenderPaul(new ModelPaul(), 1.0F));
-	//	RenderingRegistry.registerEntityRenderingHandler(EntityBrian.class, new RenderBrian(new ModelBrian(), 1.0F));
-		
-		//Nuclear Grenade
-	//	RenderingRegistry.registerEntityRenderingHandler(EntityNuclearGrenade.class, new RenderSnowball(NCItems.nuclearGrenadeThrown));
-		
-		//DU Bullet
-	//	RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, new RenderBullet());
-	}
+	//Fusion Reactor
+	TileEntitySpecialRenderer renderfusion = new RenderFusionReactor();
+	ClientRegistry.bindTileEntitySpecialRenderer(TileFusionReactor.class, renderfusion);
+	MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(NCBlocks.fusionReactor), new ItemRenderFusionReactor(renderfusion, new TileFusionReactor()));
 
+	//Fusion Reactor Steam
+	TileEntitySpecialRenderer renderfusionSteam = new RenderFusionReactorSteam();
+	ClientRegistry.bindTileEntitySpecialRenderer(TileFusionReactorSteam.class, renderfusionSteam);
+	MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(NCBlocks.fusionReactorSteam), new ItemRenderFusionReactorSteam(renderfusionSteam, new TileFusionReactorSteam()));
+
+	//Tubing 1
+	TileEntitySpecialRenderer render1 = new RenderTubing1();
+	ClientRegistry.bindTileEntitySpecialRenderer(TileTubing1.class, render1);
+	MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(NCBlocks.tubing1), new ItemRenderTubing1(render1, new TileTubing1()));
+
+	//Tubing 2
+	TileEntitySpecialRenderer render2 = new RenderTubing2();
+	ClientRegistry.bindTileEntitySpecialRenderer(TileTubing2.class, render2);
+	MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(NCBlocks.tubing2), new ItemRenderTubing2(render2, new TileTubing2()));
+
+	//Nuke Primed
+	RenderingRegistry.registerEntityRenderingHandler(EntityNukePrimed.class, new RenderNukePrimed());
+
+	//EMP Primed
+	RenderingRegistry.registerEntityRenderingHandler(EntityEMPPrimed.class, new RenderEMPPrimed());
+
+	//Antimatter Bomb Primed
+	RenderingRegistry.registerEntityRenderingHandler(EntityAntimatterBombPrimed.class, new RenderAntimatterBombPrimed());
+
+	//Entities
+	RenderingRegistry.registerEntityRenderingHandler(EntityNuclearMonster.class, new RenderNuclearMonster(new ModelNuclearMonster(), 0.3F));
+}
 	@Override
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
 		return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : super.getPlayerEntity(ctx));

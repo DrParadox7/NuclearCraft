@@ -9,13 +9,11 @@ import nc.gui.generator.GuiFusionReactor;
 import nc.gui.generator.GuiFusionReactorSteam;
 import nc.gui.machine.GuiCollector;
 import nc.gui.machine.GuiCooler;
-import nc.gui.machine.GuiFurnace;
 import nc.gui.machine.GuiHastener;
 import nc.gui.machine.GuiHeliumExtractor;
 import nc.gui.machine.GuiIoniser;
 import nc.gui.machine.GuiIrradiator;
 import nc.gui.machine.GuiNuclearFurnace;
-import nc.gui.machine.GuiOxidiser;
 import nc.gui.machine.GuiRecycler;
 import nc.gui.machine.GuiSeparator;
 import nc.item.NCItems;
@@ -45,8 +43,6 @@ public class NEINCConfig implements IConfigureNEI {
 		API.registerUsageHandler(new FissionSteamRecipeHandler());
 		API.registerRecipeHandler(new CollectorRecipeHandler());
 		API.registerUsageHandler(new CollectorRecipeHandler());
-		API.registerRecipeHandler(new OxidiserRecipeHandler());
-		API.registerUsageHandler(new OxidiserRecipeHandler());
 		API.registerRecipeHandler(new IoniserRecipeHandler());
 		API.registerUsageHandler(new IoniserRecipeHandler());
 		API.registerRecipeHandler(new IrradiatorRecipeHandler());
@@ -73,7 +69,6 @@ public class NEINCConfig implements IConfigureNEI {
 		API.registerGuiOverlay(GuiFissionReactor.class, "fission");
 		API.registerGuiOverlay(GuiFissionReactorSteam.class, "fission");
 		API.registerGuiOverlay(GuiCollector.class, "collecting");
-		API.registerGuiOverlay(GuiOxidiser.class, "oxidising");
 		API.registerGuiOverlay(GuiIoniser.class, "ionising");
 		API.registerGuiOverlay(GuiIrradiator.class, "irradiating");
 		API.registerGuiOverlay(GuiCooler.class, "cooling");
@@ -90,6 +85,7 @@ public class NEINCConfig implements IConfigureNEI {
 		API.hideItem(new ItemStack(NCBlocks.reactionGeneratorActive));
 		API.hideItem(new ItemStack(NCBlocks.separatorActive));
 		API.hideItem(new ItemStack(NCBlocks.collectorActive));
+		API.hideItem(new ItemStack(NCBlocks.oxidiserIdle));
 		API.hideItem(new ItemStack(NCBlocks.oxidiserActive));
 		API.hideItem(new ItemStack(NCBlocks.ioniserActive));
 		API.hideItem(new ItemStack(NCBlocks.irradiatorActive));
@@ -108,7 +104,6 @@ public class NEINCConfig implements IConfigureNEI {
 		API.hideItem(new ItemStack(NCBlocks.nukeE));
 		API.hideItem(new ItemStack(NCBlocks.antimatterBombE));
 		API.hideItem(new ItemStack(NCBlocks.EMPE));
-	//	API.hideItem(new ItemStack(NCItems.nuclearGrenadeThrown));
 	}
 
 	public String getName() {
