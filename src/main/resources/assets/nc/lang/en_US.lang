@@ -526,6 +526,8 @@ dHEC247CellOxide.name=Depleted HEC-247 Oxide Fuel Cell
 RTGCell.name=Plutonium RTG Capsule
 AmRTGCell.name=Americium RTG Capsule
 CfRTGCell.name=Californium RTG Capsule
+UrRTGCell.name=Uranium RTG Capsule
+
 
 H2OCell.name=Water Cell
 OCell.name=Oxygen Cell

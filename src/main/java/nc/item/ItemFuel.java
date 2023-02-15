@@ -15,7 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemFuel extends ItemMeta {
 
 	public ItemFuel() {
-		super("fuel", "fuel", 141);
+		super("fuel", "fuel", 142);
 	}
 	
 	@SuppressWarnings({ "rawtypes" })
@@ -232,6 +232,7 @@ public class ItemFuel extends ItemMeta {
 			case 138: return "dHEC247CellOxide";
 			case 139: return "AmRTGCell";
 			case 140: return "CfRTGCell";
+			case 141: return "UrRTGCell";
 			default: return this.getUnlocalizedName();
 		}
 	}
