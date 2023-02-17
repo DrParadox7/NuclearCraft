@@ -20,12 +20,13 @@ public class ItemPart extends ItemMeta {
         super.addInformation(itemStack, player, list, whatIsThis);
         if (info(itemStack.getItemDamage()) == InfoNC.nul); else if (info(itemStack.getItemDamage()).length > 0) InfoNC.infoFull(list, info(itemStack.getItemDamage()));
     }
-	
+
 	public String[] info(int m) {
-		if (m == 18 || m == 19) return info("Only craftable in the Assembler.");
-		else return InfoNC.nul;
+//		if (m == 18 || m == 19) return info("Only craftable in the Assembler.");
+//		else
+			return InfoNC.nul;
 	}
-	
+
 	public String[] info(String string) {
 		String[] inf = {
 			string

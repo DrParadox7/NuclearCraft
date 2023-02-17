@@ -2,6 +2,11 @@ package nc;
 
 import java.io.File;
 
+import mekanism.api.gas.Gas;
+import mekanism.api.gas.GasRegistry;
+import mekanism.api.gas.GasifyableItems;
+import mekanism.api.infuse.InfuseRegistry;
+import mekanism.api.util.StackUtils;
 import nc.block.NCBlocks;
 import nc.block.accelerator.BlockSuperElectromagnet;
 import nc.block.accelerator.BlockSupercooler;
@@ -101,6 +106,7 @@ import nc.itemblock.storage.ItemBlockLithiumIonBattery;
 import nc.itemblock.storage.ItemBlockVoltaicPile;
 import nc.packet.PacketHandler;
 import nc.proxy.CommonProxy;
+import nc.render.NuclearcraftRenderer;
 import nc.tile.accelerator.TileSuperElectromagnet;
 import nc.tile.accelerator.TileSupercooler;
 import nc.tile.accelerator.TileSynchrotron;
@@ -156,7 +162,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = NuclearCraft.modid, version = NuclearCraft.version)
+@Mod(modid = NuclearCraft.modid, version = NuclearCraft.version, dependencies = "required-after:Mekanism;")
 
 public class NuclearCraft {
 	public static int connectedRenderID;
@@ -170,15 +176,11 @@ public class NuclearCraft {
 			return Item.getItemFromBlock(NCBlocks.fusionReactor);
 		}
 	};
-	
-	// Mod Checker
-	public static boolean isIC2Loaded;
-	public static boolean isTELoaded;
-	
+
 	// Mod Hooks
 	public static IC2Recipes IC2Hook;
 	public static TERecipes TEHook;
-	
+
 	@Instance(modid)
 	public static NuclearCraft instance;
 	
@@ -201,7 +203,6 @@ public class NuclearCraft {
 	public static final int guiIdRecycler = 23;
 	
 	// Config File
-	public static boolean workspace;
 	public static boolean workspaceShiftClick;
 	public static boolean nonTECoolerRecipes;
 	
@@ -491,36 +492,6 @@ public class NuclearCraft {
 	public static int electromagnetHe;
 	public static int acceleratorProduction;
 	public static boolean acceleratorSounds;
-	
-	public static int bronzeHarvestLevel;
-	public static int bronzeDurability;
-	public static int bronzeSpeed;
-	public static int bronzeDamage;
-	
-	public static int toughHarvestLevel;
-	public static int toughDurability;
-	public static int toughSpeed;
-	public static int toughDamage;
-	
-	public static int tPHarvestLevel;
-	public static int tPDurability;
-	public static int tPSpeed;
-	public static int tPDamage;
-	
-	public static int dUHarvestLevel;
-	public static int dUDurability;
-	public static int dUSpeed;
-	public static int dUDamage;
-	
-	public static int dUPHarvestLevel;
-	public static int dUPDurability;
-	public static int dUPSpeed;
-	public static int dUPDamage;
-	
-	public static int boronHarvestLevel;
-	public static int boronDurability;
-	public static int boronSpeed;
-	public static int boronDamage;
 
 	public static Fluid liquidHelium;
 	public static Fluid fusionPlasma;
@@ -567,8 +538,6 @@ public class NuclearCraft {
 		toolConfig.load();
 
 
-		
-		workspace = config.getBoolean("If disabled, all crafting recipes will be vanilla crafting table recipes, and the Heavy Duty Workspace will be disabled", "!: Enable Heavy Duty Workspace", true, "");
 		workspaceShiftClick = config.getBoolean("If enabled, shift clicking items in the Heavy Duty Workspace will move items into the crafting grid", "!: Enable Shift Click into Workspace Grid", false, "");
 		nonTECoolerRecipes = config.getBoolean("Enable the vanilla crafting recipes for the advanced reactor coolers EVEN IF Thermal Expansion is not installed", "!: Force Vanilla Crafting of Coolers", false, "");
 		
@@ -1222,54 +1191,55 @@ public class NuclearCraft {
 		m(118, "tinyCm246Oxide");
 		m(120, "tinyCm247Oxide");
 		m(124, "tinyCf250Oxide");
-		
-		// Shaped Crafting Recipes
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.fuel, 16, 33), true, new Object[] {" I ", "I I", " I ", 'I', "plateIron"}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.fuel, 16, 45), true, new Object[] {" I ", "I I", " I ", 'I', "plateTin"}));
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 2, 0), true, new Object[] {"LLL", "CCC", 'L', "ingotLead", 'C', "dustCoal"}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 2), true, new Object[] {"FFF", "CCC", "SSS", 'F', Items.flint, 'C', "cobblestone", 'S', Items.stick}));
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 16, 1), true, new Object[] {"III", "IBI", "III", 'I', "ingotIron", 'B', "blockIron"}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 16, 6), true, new Object[] {"III", "IBI", "III", 'I', "ingotTin", 'B', "blockTin"}));
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.nuclearFurnaceIdle, true, new Object[] {"XPX", "PFP", "XPX", 'P', "plateBasic", 'X', "dustObsidian", 'F', Blocks.furnace}));
-	
-		if (workspace) GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.nuclearWorkspace, true, new Object[] {"NNN", " T ", "TTT", 'N', "plateBasic", 'T', "ingotTough"}));
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.graphiteBlock, true, new Object[] {"CDC", "DCD", "CDC", 'D', "dustCoal", 'C', Items.coal}));
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.fusionConnector, 4), true, new Object[] {"CC", 'C', NCBlocks.electromagnetIdle}));
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.upgradeSpeed, true, new Object[] {"PPP", "PCP", "PPP", 'P', "dustLapis", 'C', "plateIron"}));
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.upgradeEnergy, true, new Object[] {"PPP", "PCP", "PPP", 'P', "universalReactant", 'C', "plateIron"}));
-		
-		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.voltaicPile, true, new Object[] {"PCP", "PMP", 'P', "plateBasic", 'C', "blockCopper", 'M', "blockMagnesium"}));
 
 		// Simple Shapeless Crafting Recipes
-		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 4), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 4)});
+			//Copper Ingot
 		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 0), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 0)});
+			//Tin Ingot
 		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 1), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 1)});
+			//Lead Ingot
 		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 2), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 2)});
+			//Silver Ingot
 		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 3), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 3)});
-		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 6), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 6)});
+			//Uranium Ingot
+		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 4), new ItemStack(NCBlocks.blockBlock, 1, 4));
+			//Thorium Ingot
 		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 5), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 5)});
-		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 42), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 8)});
-		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 43), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 9)});
+			//Bronze Ingot
+		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 6), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 6)});
+			//Tough Alloy Ingot
 		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 25, 7), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 7)});
+			//Lithium Ingot
+		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 42), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 8)});
+			//Boron Ingot
+		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 43), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 9)});
+			//Magnesium Ingot
 		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 50), new Object[] {new ItemStack(NCBlocks.blockBlock, 1, 10)});
+			//Graphite Ingot
 		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.material, 9, 76), new Object[] {new ItemStack(NCBlocks.graphiteBlock, 1)});
-		
+
+			//Reinforced Tubings - Horizontal & Vertical
 		GameRegistry.addShapelessRecipe(new ItemStack(NCBlocks.tubing1, 1), new Object[] {new ItemStack(NCBlocks.tubing2)});
 		GameRegistry.addShapelessRecipe(new ItemStack(NCBlocks.tubing2, 1), new Object[] {new ItemStack(NCBlocks.tubing1)});
 		
 		// Complex Shapeless Crafting Recipes
+			//Bronze - Ingot + Dust
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 4, 6), new Object[] {"ingotCopper", "ingotCopper", "ingotCopper", "ingotTin"}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 4, 21), new Object[] {"dustCopper", "dustCopper", "dustCopper", "dustTin"}));
-		
+
+			//Magnesium Diborite - Ingot + Dust
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 3, 71), new Object[] {"ingotMagnesium", "ingotBoron", "ingotBoron"}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 3, 72), new Object[] {"dustMagnesium", "dustBoron", "dustBoron"}));
-		
+
+			//Uranium RTG Capsule
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.fuel, 1, 141), new Object[] {new ItemStack(NCItems.fuel, 1, 48), "U238"}));
+			//Americium RTG Capsule
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.fuel, 1, 139), new Object[] {new ItemStack(NCItems.fuel, 1, 48), "Am241"}));
+			//Plutonium RTG Capsule
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.fuel, 1, 46), new Object[] {new ItemStack(NCItems.fuel, 1, 48), "Pu238"}));
+			//Californium RTG Capsule
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.fuel, 1, 140), new Object[] {new ItemStack(NCItems.fuel, 1, 48), "Cf250"}));
+
 		// Fission Fuel Shapeless Recipes
 		l(0, "U238", "U235Base");
 		h(1, "U238", "U235Base");
@@ -1364,20 +1334,94 @@ public class NuclearCraft {
 		c(42, "Li7");
 		c(43, "B10");
 		c(44, "B11");
-		
+
+		// Simple Shaped Crafting Recipes
+			//Empty Fission Cell
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.fuel, 4, 33),  new Object[] {" I ", "IGI", " I ", 'I', "ingotSteel", 'G', "blockGlassColorless"}));
+			//Empty Fluid Cell
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.fuel, 4, 45),  new Object[] {" I ", "IGI", " I ", 'I', "ingotIron", 'G', "blockGlassColorless"}));
+			//Empty Capsule
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.fuel, 4, 48),  new Object[] {"IPI", "P P", "IPI", 'I', "ingotSteel", 'P', "plateBasic"}));
+			//Nuclear Furnace
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.nuclearFurnaceIdle,  new Object[] {"XIX", "IFI", "XIX", 'X', "plateBasic", 'I', "ingotRefinedObsidian", 'F', Blocks.furnace}));
+
+		//Mekanism Shaped Recipes
+		ItemStack atomicManipulator = GameRegistry.findItemStack("minechem", "minechemAtomicManipulator", 1);
+		ItemStack rotationalComplex = GameRegistry.findItemStack("MekanismGenerators", "Generator", 1);
+		rotationalComplex.setItemDamage(8);
+
+		ItemStack machineCasing = GameRegistry.findItemStack("Mekanism", "BasicBlock", 1);
+		machineCasing.setItemDamage(8);
+
+		ItemStack structuralGlass = GameRegistry.findItemStack("Mekanism", "BasicBlock", 1);
+		structuralGlass.setItemDamage(10);
+
+		ItemStack elecroCore = GameRegistry.findItemStack("Mekanism", "ElectrolyticCore", 1);
+
+		ItemStack polyetheneBlock = GameRegistry.findItemStack("Mekanism", "PlasticBlock", 1);
+		polyetheneBlock.setItemDamage(15);
+
+		ItemStack pressureDispenser = GameRegistry.findItemStack("Mekanism", "BasicBlock2", 1);
+		pressureDispenser.setItemDamage(6);
+
+		ItemStack enrichedAlloy = GameRegistry.findItemStack("Mekanism", "EnrichedAlloy", 1);
+		ItemStack reinforcedAlloy = GameRegistry.findItemStack("Mekanism", "ReinforcedAlloy", 1);
+
+		ItemStack reinforedPlastic = GameRegistry.findItemStack("Mekanism", "ReinforcedPlasticBlock", 1);
+		reinforedPlastic.setItemDamage(15);
+
+		ItemStack polyethenePlate = GameRegistry.findItemStack("Mekanism", "Polyethene", 1);
+		polyethenePlate.setItemDamage(2);
+
+		ItemStack advControlCircuit = GameRegistry.findItemStack("Mekanism", "ControlCircuit", 1);
+		advControlCircuit.setItemDamage(1);
+
+			//Basic Plating
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 4, 0), new Object[] {"PLP", "LGL", "PLP", 'P', polyethenePlate, 'L', "ingotLead", 'G', "dustGraphite"}));
+			//Computer Plating
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 2, 18), new Object[] {"SCS", "IRI", "SCS", 'S', "itemSilicon", 'C', advControlCircuit, 'R', "plateReinforced", 'I', "ingotGold"}));
+
+			//Isotope Separator
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.separatorIdle, new Object[] {"BRB", "GMG", "BCB", 'B', "plateBasic", 'G', "gearGold", 'R', atomicManipulator != null ? atomicManipulator : rotationalComplex, 'M', machineCasing, 'C', "coilGold"}));
+			//Decay Hastener
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.hastenerIdle, new Object[] {"BUB", "GMG", "BCB",'B', "plateBasic",'U', "plateDU", 'G', "gearLead", 'M', machineCasing, 'C', "coilGold"}));
+			//Ioniser
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.ioniserIdle, new Object[] {"BDB", "GMG", "BCB",'B', "plateBasic",'D', new ItemStack(NCItems.parts, 1, 17), 'G', "gearSignalum", 'M', machineCasing, 'C', "coilGold"}));
+			//Helium Liquifier
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.coolerIdle, new Object[] {"BKB", "GMG", "BCB",'B', "plateBasic",'K', new ItemStack(NCBlocks.cryotheumCoolerBlock, 1, 0), 'G', "gearBronze", 'M', machineCasing, 'C', "coilGold"}));
+			//Recycler
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.recyclerIdle, new Object[] {"BEB", "GMG", "BCB",'B', "plateBasic",'E', elecroCore, 'G', "gearEnderium", 'M', machineCasing, 'C', "coilGold"}));
+			//Steam Decompressor
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.steamDecompressor, new Object[] {"PDP", "DAD", "PDP", 'P', polyetheneBlock, 'D', pressureDispenser, 'A', enrichedAlloy}));
+			//Dense Steam Decompressor
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.denseSteamDecompressor, new Object[] {"RDR", "DAD", "RDR", 'R', reinforedPlastic, 'D', new ItemStack(NCBlocks.steamDecompressor, 1, 0), 'A', reinforcedAlloy}));
+
+			//Reactor Glass
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.reactorBlock,1, 1),  new Object[] {" R ", "RGR", " R ", 'R', new ItemStack(NCBlocks.reactorBlock), 'G', structuralGlass}));
+
+			//Reactor Port
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.fissonReactorProxy, 1), new Object[] {"ARA", "RCR", "ARA", 'A', enrichedAlloy, 'R', new ItemStack(NCBlocks.reactorBlock,1, 0), 'C', new ItemStack(NCItems.parts, 1, 18)}));
+
+			//Heavy Duty Workspace
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.nuclearWorkspace, 1), new Object[] {"III", " R ", "AMA", 'I', "ingotSteel", 'R', reinforcedAlloy, 'A', enrichedAlloy, 'M', machineCasing}));
+
+
 		// Other Shapeless Recipes
+			//Universal Reactant
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.parts, 3, 4), new Object[] {Items.sugar, "dustLapis", Items.redstone}));
 
+			//Records
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.recordPractice, 1), new Object[] {"record", "ingotBoron"}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.recordArea51, 1), new Object[] {"record", "ingotTough"}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.recordNeighborhood, 1), new Object[] {"record", "universalReactant"}));
 
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 4, 22), new Object[] {new ItemStack(NCItems.parts, 1, 4), "dustCoal", "dustCoal", "dustLead", "dustLead", "dustSilver", "dustSilver", "dustIron", "dustIron"}));
-		
+			//Tough Alloy - Ingot + Dust
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 4, 7), new Object[] {new ItemStack(NCItems.parts, 1, 4), "dustCoal", "dustCoal", "ingotLead", "ingotLead", "ingotSilver", "ingotSilver", "ingotIron", "ingotIron"}));
-		
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 4, 22), new Object[] {new ItemStack(NCItems.parts, 1, 4), "dustCoal", "dustCoal", "dustLead", "dustLead", "dustSilver", "dustSilver", "dustIron", "dustIron"}));
+
+			//Empty Fluid Cell
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.fuel, 1, 45), new Object[] {"filledNCGasCell"}));
-		
+			//Water Fluid Cell
 		GameRegistry.addShapelessRecipe(new ItemStack(NCItems.fuel, 1, 34), (new ItemStack (Items.water_bucket, 1)), (new ItemStack (NCItems.fuel, 1, 45)));
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(NCBlocks.coolerBlock, 1), (new ItemStack (Items.redstone, 1)), (new ItemStack(NCItems.parts, 1, 4)), (new ItemStack (NCBlocks.emptyCoolerBlock, 1)));
@@ -1385,210 +1429,75 @@ public class NuclearCraft {
 		GameRegistry.addShapelessRecipe(new ItemStack(NCBlocks.waterCoolerBlock, 1), (new ItemStack (Items.water_bucket, 1)), (new ItemStack (NCBlocks.emptyCoolerBlock, 1)));
 		
 		GameRegistry.addShapelessRecipe(new ItemStack(NCBlocks.heliumCoolerBlock, 1), (new ItemStack (NCBlocks.emptyCoolerBlock, 1)), (new ItemStack (NCItems.fuel, 1, 75)), (new ItemStack (NCItems.fuel, 1, 75)), (new ItemStack (NCItems.fuel, 1, 75)), (new ItemStack (NCItems.fuel, 1, 75)));
-		
+
+			//Hard Crushed Carbon Dust
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 2, 79), new Object[] {"dustGraphite", "dustDiamond"}));
-		
+
+			//Lithium Manganese - Ingot + Dust
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 2, 80), new Object[] {"ingotLithium", "ingotManganeseDioxide"}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 2, 81), new Object[] {"dustLithium", "dustManganeseDioxide"}));
 		
-		// Workspace Recipes
-		if (!workspace) {
-			GameRegistry.addRecipe(new ShapelessOreRecipe(NCBlocks.machineBlock, new Object[] {"plateBasic", "plateLead", "plateLead", new ItemStack(NCItems.parts, 1, 10), new ItemStack(NCItems.parts, 1, 11), new ItemStack(NCItems.parts, 1, 12), new ItemStack(NCItems.parts, 1, 13), new ItemStack(NCItems.parts, 1, 16), "dustRedstone"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.reactorBlock, 8), true, new Object[] {"ABA", "B B", "ABA", 'A', "ingotTough", 'B', "plateBasic"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.cellBlock, 1), true, new Object[] {"ABA", "CDC", "ABA", 'A', "blockGlass", 'B', "plateBasic", 'C', "ingotTough", 'D', "plateLead"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.emptyCoolerBlock, 8), true, new Object[] {"ABA", "B B", "ABA", 'A', "universalReactant", 'B', "plateBasic"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.speedBlock, 4), true, new Object[] {"ABA", "BCB", "ABA", 'A', Items.blaze_powder, 'B', "plateBasic", 'C', "dustRedstone"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.fissionReactorGraphiteIdle, true, new Object[] {"BAB", "ACA", "BAB", 'A', "plateReinforced", 'B', "plateDU", 'C', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.fissionReactorSteamIdle, true, new Object[] {"BAB", "ACA", "BAB", 'A', new ItemStack(NCItems.parts, 1, 7), 'B', "plateAdvanced", 'C', NCBlocks.fissionReactorGraphiteIdle}));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(NCBlocks.blastBlock, new Object[] {NCBlocks.reactorBlock, "oreObsidian"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 9), true, new Object[] {"AAA", "BCB", "AAA", 'A', new ItemStack(NCItems.material, 1, 48), 'B', "plateDU", 'C', "dustDiamond"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.separatorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateLead", 'B', "ingotTough", 'C', "dustRedstone", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.recyclerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateLead", 'B', "ingotTough", 'C', "ingotHardCarbon", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.hastenerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateLead", 'B', "universalReactant", 'C', "ingotTough", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.collectorIdle, true, new Object[] {"ABA", "BBB", "ABA", 'A', "plateBasic", 'B', new ItemStack(NCItems.material, 1, 40)}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.reactionGeneratorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateLead", 'B', new ItemStack(NCItems.parts, 1, 5), 'C', "plateBasic", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.ioniserIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "dustRedstone", 'C', "plateLead", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.irradiatorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "universalReactant", 'C', "ingotTough", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.coolerIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateDU", 'B', "universalReactant", 'C', "plateBasic", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.heliumExtractorIdle, true, new Object[] {"ABA", "CDC", "ABA", 'A', "plateReinforced", 'B', new ItemStack(NCItems.parts, 1, 5), 'C', "plateTin", 'D', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.electromagnetIdle, 2), true, new Object[] {"AAA", "BCB", "AAA", 'A', "plateReinforced", 'B', new ItemStack(NCItems.parts, 1, 12), 'C', "ingotIron"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.fusionReactor, true, new Object[] {"ABA", "BCB", "ABA", 'A', NCBlocks.reactionGeneratorIdle, 'B', "plateAdvanced", 'C', NCBlocks.electromagnetIdle}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.fusionReactorSteam, true, new Object[] {"BAB", "ACA", "BAB", 'A', new ItemStack(NCItems.parts, 1, 7), 'B', "plateAdvanced", 'C', NCBlocks.fusionReactor}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.superElectromagnetIdle, true, new Object[] {"AAA", "BCB", "AAA", 'A', "plateAdvanced", 'B', new ItemStack(NCItems.parts, 1, 17), 'C', "ingotTough"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.synchrotronIdle, true, new Object[] {"AAA", "BCB", "AAA", 'A', NCBlocks.superElectromagnetIdle, 'B', "plateAdvanced", 'C', NCBlocks.machineBlock}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.supercoolerIdle, true, new Object[] {"AAA", "BCB", "AAA", 'A', "plateAdvanced", 'B', new ItemStack(NCItems.parts, 1, 13), 'C', "universalReactant"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.RTG, true, new Object[] {"ABA", "BCB", "ABA", 'A', new ItemStack(NCItems.parts, 1, 11), 'B', new ItemStack(NCItems.parts, 1, 15), 'C', new ItemStack(NCItems.fuel, 1, 46)}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.AmRTG, true, new Object[] {"ABA", "BCB", "ABA", 'A', new ItemStack(NCItems.parts, 1, 11), 'B', new ItemStack(NCItems.parts, 1, 15), 'C', new ItemStack(NCItems.fuel, 1, 139)}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.CfRTG, true, new Object[] {"ABA", "BCB", "ABA", 'A', new ItemStack(NCItems.parts, 1, 11), 'B', new ItemStack(NCItems.parts, 1, 15), 'C', new ItemStack(NCItems.fuel, 1, 140)}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.WRTG, true, new Object[] {"ABA", "BBB", "ABA", 'A', "plateLead", 'B', "U238"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.steamGenerator, true, new Object[] {"PCP", "MMM", "PCP", 'P', "plateIron", 'C', new ItemStack(NCItems.parts, 1, 12), 'M', new ItemStack(NCItems.parts, 1, 19)}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.steamDecompressor, true, new Object[] {"PCP", "GMG", "PCP", 'P', "plateIron", 'C', Blocks.piston, 'G', new ItemStack(NCItems.parts, 1, 10), 'M', new ItemStack(NCItems.parts, 1, 19)}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.denseSteamDecompressor, true, new Object[] {"PPP", "CCC", "PPP", 'P', "plateAdvanced", 'C', NCBlocks.steamDecompressor}));
-			if (enableNukes) {
-				GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.antimatterBomb, true, new Object[] {"AAA", "ABA", "AAA", 'A', NCItems.antimatter, 'B', NCBlocks.superElectromagnetIdle}));
-			}
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.solarPanel, true, new Object[] {"DDD", "ECE", "ABA", 'A', new ItemStack(NCItems.parts, 1, 12), 'B', Blocks.iron_block, 'C', "dustCoal", 'D', new ItemStack(NCItems.parts, 1, 15), 'E', "universalReactant"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 2, 5), true, new Object[] {"ABA", "B B", "ABA", 'A', "universalReactant", 'B', "plateBasic"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 7), true, new Object[] {"ABA", "B B", "ABA", 'A', "plateTin", 'B', new ItemStack(NCItems.fuel, 1, 34)}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 3), true, new Object[] {" A ", "ABA", " A ", 'A', "ingotTough", 'B', "plateBasic"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 1, 8), true, new Object[] {"AAA", "BBB", "AAA", 'A', "U238", 'B', "plateReinforced"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.tubing1, 8), true, new Object[] {"AAA", "BBB", "AAA", 'A', "plateLead", 'B', "plateIron"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.tubing2, 8), true, new Object[] {"ABA", "ABA", "ABA", 'A', "plateLead", 'B', "plateIron"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 12, 0), true, new Object[] {"AAA", "BBB", 'A', "ingotTough", 'B', "dustTough"}));
-			GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.fuel, 8, 48), true, new Object[] {"ABA", "BCB", "ABA", 'B', new ItemStack(NCItems.parts, 1, 15), 'C', "ingotTough", 'A', new ItemStack (NCItems.parts, 1, 3)}));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.fuel, 1, 46), new Object[] {new ItemStack(NCItems.fuel, 1, 48), "Pu238"}));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.fuel, 1, 139), new Object[] {new ItemStack(NCItems.fuel, 1, 48), "Am241"}));
-			GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.fuel, 1, 140), new Object[] {new ItemStack(NCItems.fuel, 1, 48), "Cf250"}));
-			
-			GameRegistry.addRecipe(new ShapedOreRecipe(NCItems.lithiumIonBattery, true, new Object[] {"AAA", "BCB", "DDD", 'A', "ingotLithiumManganeseDioxide", 'B', "plateAdvanced", 'C', "dustLithium", 'D', "ingotHardCarbon"}));
-		}
-		
 		// Smelting Recipes
-		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 4), new ItemStack (NCItems.material, 1, 4), 1.2F);
+			//Copper Ore -> Copper Ingot
 		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 0), new ItemStack(NCItems.material, 1, 0), 0.6F);
+			//Tin Ore -> Tin Ingot
 		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 1), new ItemStack(NCItems.material, 1, 1), 0.6F);
+			//Lead Ore -> Lead Ingot
 		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 2), new ItemStack(NCItems.material, 1, 2), 0.8F);
+			//Silver Ore -> Silver Ingot
 		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 3), new ItemStack(NCItems.material, 1, 3), 0.8F);
+			//Uranium Ore -> Uranium Ingot
+		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 4), new ItemStack (NCItems.material, 1, 4), 1.2F);
+			//Thorium Ore -> Thorium Ingot
 		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 5), new ItemStack(NCItems.material, 1, 5), 1.2F);
+			//Plutonium Ore -> Plutonium Lump
 		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 6), new ItemStack(NCItems.material, 1, 33), 1.2F);
+			//Lithium Ore ->Lithium Ingot
 		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 7), new ItemStack(NCItems.material, 1, 42), 0.8F);
+			//Boron Ore -> Boron Ingot
 		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 8), new ItemStack(NCItems.material, 1, 43), 0.8F);
+			//Magnesium Ore -> Magnesium Ingot
 		GameRegistry.addSmelting(new ItemStack(NCBlocks.blockOre, 1, 9), new ItemStack(NCItems.material, 1, 50), 0.8F);
-		
+
+			//Iron Dust -> Iron Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 8), new ItemStack(Items.iron_ingot), 0.0F);
+			//Gold Dust -> Gold Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 9), new ItemStack(Items.gold_ingot), 0.0F);
+			//Copper Dust -> Copper Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 15), new ItemStack(NCItems.material, 1, 0), 0.0F);
-		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 17), new ItemStack(NCItems.material, 1, 2), 0.0F);
+			//Tin Dust -> Tin Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 16), new ItemStack(NCItems.material, 1, 1), 0.0F);
+			//Lead Dust -> Lead Ingot
+		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 17), new ItemStack(NCItems.material, 1, 2), 0.0F);
+			//Silver Dust -> Silver Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 18), new ItemStack(NCItems.material, 1, 3), 0.0F);
+			//Uranium Dust -> Uranium Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 19), new ItemStack(NCItems.material, 1, 4), 0.0F);
+			//Thorium Dust -> Thorium Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 20), new ItemStack(NCItems.material, 1, 5), 0.0F);
+			//Bronze Dust -> Bronze Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 21), new ItemStack(NCItems.material, 1, 6), 0.0F);
+			//Tough Alloy Dust -> Tough Alloy Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 22), new ItemStack(NCItems.material, 1, 7), 0.0F);
+			//Lithium Dust -> Lithium Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 44), new ItemStack(NCItems.material, 1, 42), 0.0F);
+			//Boron Dust -> Boron Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 45), new ItemStack(NCItems.material, 1, 43), 0.0F);
+			//Magnesium Dust -> Magnesium Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 51), new ItemStack(NCItems.material, 1, 50), 0.0F);
+			//Uranium Oxide Dust -> Uranium Oxide Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 54), new ItemStack(NCItems.material, 1, 53), 0.0F);
-		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 127), new ItemStack(NCItems.material, 1, 126), 0.0F);
+			//Magnesium Diborite Dust -> Magnesium Diborite Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 72), new ItemStack(NCItems.material, 1, 71), 0.0F);
+			//Graphite Dust -> Graphite Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 77), new ItemStack(NCItems.material, 1, 76), 0.0F);
+			//Hard Carbon Dust -> Hard Carbon Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 79), new ItemStack(NCItems.material, 1, 78), 0.0F);
+			//Lithium Manganese Dust -> Lithium Manganese Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 81), new ItemStack(NCItems.material, 1, 80), 0.0F);
-		
-		//GameRegistry.addSmelting(new ItemStack(Items.egg, 1), new ItemStack(NCItems.boiledEgg, 1), 0.1F);
-		
-		s(NCItems.fuel, 51, 0);
-		s(NCItems.fuel, 52, 1);
-		s(NCItems.fuel, 53, 2);
-		s(NCItems.fuel, 54, 3);
-		s(NCItems.fuel, 55, 6);
-		s(NCItems.fuel, 56, 7);
-		s(NCItems.fuel, 57, 8);
-		s(NCItems.fuel, 58, 9);
-		
-		s(NCItems.fuel, 59, 11);
-		s(NCItems.fuel, 60, 12);
-		s(NCItems.fuel, 61, 13);
-		s(NCItems.fuel, 62, 14);
-		s(NCItems.fuel, 63, 17);
-		s(NCItems.fuel, 64, 18);
-		s(NCItems.fuel, 65, 19);
-		s(NCItems.fuel, 66, 20);
-		
-		s(NCItems.fuel, 67, 22);
-		s(NCItems.fuel, 68, 23);
-		s(NCItems.fuel, 69, 24);
-		s(NCItems.fuel, 70, 25);
-		s(NCItems.fuel, 71, 28);
-		s(NCItems.fuel, 72, 29);
-		s(NCItems.fuel, 73, 30);
-		s(NCItems.fuel, 74, 31);
-		
-		s(NCItems.fuel, 76, 5);
-		s(NCItems.fuel, 77, 16);
-		s(NCItems.fuel, 78, 27);
-		
-		s(NCItems.fuel, 89, 79);
-		s(NCItems.fuel, 90, 80);
-		s(NCItems.fuel, 91, 81);
-		s(NCItems.fuel, 92, 82);
-		s(NCItems.fuel, 93, 83);
-		s(NCItems.fuel, 94, 84);
-		s(NCItems.fuel, 95, 85);
-		s(NCItems.fuel, 96, 86);
-		s(NCItems.fuel, 97, 87);
-		s(NCItems.fuel, 98, 88);
-		
-		s(NCItems.fuel, 109, 99);
-		s(NCItems.fuel, 110, 100);
-		s(NCItems.fuel, 111, 101);
-		s(NCItems.fuel, 112, 102);
-		s(NCItems.fuel, 113, 103);
-		s(NCItems.fuel, 114, 104);
-		s(NCItems.fuel, 115, 105);
-		s(NCItems.fuel, 116, 106);
-		s(NCItems.fuel, 117, 107);
-		s(NCItems.fuel, 118, 108);
-		
-		s(NCItems.fuel, 129, 119);
-		s(NCItems.fuel, 130, 120);
-		s(NCItems.fuel, 131, 121);
-		s(NCItems.fuel, 132, 122);
-		s(NCItems.fuel, 133, 123);
-		s(NCItems.fuel, 134, 124);
-		s(NCItems.fuel, 135, 125);
-		s(NCItems.fuel, 136, 126);
-		s(NCItems.fuel, 137, 127);
-		s(NCItems.fuel, 138, 128);
-		
-		s(NCItems.material, 53, 4);
-		s(NCItems.material, 126, 5);
-		s(NCItems.material, 54, 19);
-		s(NCItems.material, 127, 20);
-		
-		s(NCItems.material, 55, 24);
-		s(NCItems.material, 56, 25);
-		s(NCItems.material, 57, 26);
-		s(NCItems.material, 58, 27);
-		s(NCItems.material, 59, 28);
-		s(NCItems.material, 60, 29);
-		s(NCItems.material, 61, 30);
-		s(NCItems.material, 62, 31);
-		s(NCItems.material, 63, 32);
-		s(NCItems.material, 64, 33);
-		s(NCItems.material, 65, 34);
-		s(NCItems.material, 66, 35);
-		s(NCItems.material, 67, 36);
-		s(NCItems.material, 68, 37);
-		s(NCItems.material, 82, 38);
-		s(NCItems.material, 83, 39);
-		s(NCItems.material, 84, 40);
-		s(NCItems.material, 85, 41);
-		
-		s(NCItems.material, 75, 74);
-		
-		s(NCItems.material, 104, 86);
-		s(NCItems.material, 105, 87);
-		s(NCItems.material, 106, 88);
-		s(NCItems.material, 107, 89);
-		s(NCItems.material, 108, 90);
-		s(NCItems.material, 109, 91);
-		s(NCItems.material, 110, 92);
-		s(NCItems.material, 111, 93);
-		s(NCItems.material, 112, 94);
-		s(NCItems.material, 113, 95);
-		s(NCItems.material, 114, 96);
-		s(NCItems.material, 115, 97);
-		s(NCItems.material, 116, 98);
-		s(NCItems.material, 117, 99);
-		s(NCItems.material, 118, 100);
-		s(NCItems.material, 119, 101);
-		s(NCItems.material, 120, 102);
-		s(NCItems.material, 121, 103);
-		
-		s(NCItems.material, 124, 122);
-		s(NCItems.material, 125, 123);
-		
+			//Thorium Oxide Dust -> Thorium Oxide Ingot
+		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 127), new ItemStack(NCItems.material, 1, 126), 0.0F);
+
 		// Gui Handler
 		@SuppressWarnings("unused")
 		GuiHandler guiHandler = new GuiHandler();
@@ -1609,7 +1518,452 @@ public class NuclearCraft {
 
 		// Fuel Handler	
 		GameRegistry.registerFuelHandler(new FuelHandler());
-			
+
+		// Ores Ore Dictionary
+		OreDictionary.registerOre("oreUranium", new ItemStack(NCBlocks.blockOre, 1, 4));
+		OreDictionary.registerOre("oreCopper", new ItemStack(NCBlocks.blockOre, 1, 0));
+		OreDictionary.registerOre("oreTin", new ItemStack(NCBlocks.blockOre, 1, 1));
+		OreDictionary.registerOre("oreLead", new ItemStack(NCBlocks.blockOre, 1, 2));
+		OreDictionary.registerOre("oreSilver", new ItemStack(NCBlocks.blockOre, 1, 3));
+		OreDictionary.registerOre("oreThorium", new ItemStack(NCBlocks.blockOre, 1, 5));
+		OreDictionary.registerOre("orePlutonium", new ItemStack(NCBlocks.blockOre, 1, 6));
+		OreDictionary.registerOre("oreLithium", new ItemStack(NCBlocks.blockOre, 1, 7));
+		OreDictionary.registerOre("oreBoron", new ItemStack(NCBlocks.blockOre, 1, 8));
+		OreDictionary.registerOre("oreMagnesium", new ItemStack(NCBlocks.blockOre, 1, 9));
+
+		// Items Ore Dictionary
+		OreDictionary.registerOre("ingotUranium", new ItemStack(NCItems.material, 1, 4));
+		OreDictionary.registerOre("ingotCopper", new ItemStack(NCItems.material, 1, 0));
+		OreDictionary.registerOre("ingotTin", new ItemStack(NCItems.material, 1, 1));
+		OreDictionary.registerOre("ingotLead", new ItemStack(NCItems.material, 1, 2));
+		OreDictionary.registerOre("ingotSilver", new ItemStack(NCItems.material, 1, 3));
+		OreDictionary.registerOre("ingotBronze", new ItemStack(NCItems.material, 1, 6));
+		OreDictionary.registerOre("ingotThorium", new ItemStack(NCItems.material, 1, 5));
+		OreDictionary.registerOre("ingotLithium", new ItemStack(NCItems.material, 1, 42));
+		OreDictionary.registerOre("ingotBoron", new ItemStack(NCItems.material, 1, 43));
+		OreDictionary.registerOre("ingotTough", new ItemStack(NCItems.material, 1, 7));
+		OreDictionary.registerOre("ingotMagnesium", new ItemStack(NCItems.material, 1, 50));
+		OreDictionary.registerOre("ingotUraniumOxide", new ItemStack(NCItems.material, 1, 53));
+		OreDictionary.registerOre("ingotThoriumOxide", new ItemStack(NCItems.material, 1, 126));
+		OreDictionary.registerOre("ingotMagnesiumDiboride", new ItemStack(NCItems.material, 1, 71));
+		OreDictionary.registerOre("gemRhodochrosite", new ItemStack(NCItems.material, 1, 73));
+		OreDictionary.registerOre("ingotGraphite", new ItemStack(NCItems.material, 1, 76));
+		OreDictionary.registerOre("ingotHardCarbon", new ItemStack(NCItems.material, 1, 78));
+		OreDictionary.registerOre("ingotLithiumManganeseDioxide", new ItemStack(NCItems.material, 1, 80));
+
+		// Dusts Ore Dictionary
+		OreDictionary.registerOre("dustIron", new ItemStack(NCItems.material, 1, 8));
+		OreDictionary.registerOre("dustGold", new ItemStack(NCItems.material, 1, 9));
+		OreDictionary.registerOre("dustLapis", new ItemStack(NCItems.material, 1, 10));
+		OreDictionary.registerOre("dustDiamond", new ItemStack(NCItems.material, 1, 11));
+		OreDictionary.registerOre("dustEmerald", new ItemStack(NCItems.material, 1, 12));
+		OreDictionary.registerOre("dustQuartz", new ItemStack(NCItems.material, 1, 13));
+		OreDictionary.registerOre("dustCoal", new ItemStack(NCItems.material, 1, 14));
+		OreDictionary.registerOre("dustCopper", new ItemStack(NCItems.material, 1, 15));
+		OreDictionary.registerOre("dustLead", new ItemStack(NCItems.material, 1, 17));
+		OreDictionary.registerOre("dustTinyLead", new ItemStack(NCItems.material, 1, 23));
+		OreDictionary.registerOre("dustTin", new ItemStack(NCItems.material, 1, 16));
+		OreDictionary.registerOre("dustSilver", new ItemStack(NCItems.material, 1, 18));
+		OreDictionary.registerOre("dustUranium", new ItemStack(NCItems.material, 1, 19));
+		OreDictionary.registerOre("dustThorium", new ItemStack(NCItems.material, 1, 20));
+		OreDictionary.registerOre("dustBronze", new ItemStack(NCItems.material, 1, 21));
+		OreDictionary.registerOre("dustLithium", new ItemStack(NCItems.material, 1, 44));
+		OreDictionary.registerOre("dustBoron", new ItemStack(NCItems.material, 1, 45));
+		OreDictionary.registerOre("dustTough", new ItemStack(NCItems.material, 1, 22));
+		OreDictionary.registerOre("dustMagnesium", new ItemStack(NCItems.material, 1, 51));
+		OreDictionary.registerOre("dustObsidian", new ItemStack(NCItems.material, 1, 52));
+		OreDictionary.registerOre("dustUraniumOxide", new ItemStack(NCItems.material, 1, 54));
+		OreDictionary.registerOre("dustThoriumOxide", new ItemStack(NCItems.material, 1, 127));
+		OreDictionary.registerOre("dustMagnesiumDiboride", new ItemStack(NCItems.material, 1, 72));
+		OreDictionary.registerOre("dustManganeseOxide", new ItemStack(NCItems.material, 1, 74));
+		OreDictionary.registerOre("dustManganeseDioxide", new ItemStack(NCItems.material, 1, 75));
+		OreDictionary.registerOre("dustGraphite", new ItemStack(NCItems.material, 1, 77));
+		OreDictionary.registerOre("dustHardCarbon", new ItemStack(NCItems.material, 1, 79));
+		OreDictionary.registerOre("dustLithiumManganeseDioxide", new ItemStack(NCItems.material, 1, 81));
+
+		// Blocks Ore Dictionary
+		OreDictionary.registerOre("blockUranium", new ItemStack(NCBlocks.blockBlock, 1, 4));
+		OreDictionary.registerOre("blockCopper", new ItemStack(NCBlocks.blockBlock, 1, 0));
+		OreDictionary.registerOre("blockTin", new ItemStack(NCBlocks.blockBlock, 1, 1));
+		OreDictionary.registerOre("blockLead", new ItemStack(NCBlocks.blockBlock, 1, 2));
+		OreDictionary.registerOre("blockSilver", new ItemStack(NCBlocks.blockBlock, 1, 3));
+		OreDictionary.registerOre("blockBronze", new ItemStack(NCBlocks.blockBlock, 1, 6));
+		OreDictionary.registerOre("blockThorium", new ItemStack(NCBlocks.blockBlock, 1, 5));
+		OreDictionary.registerOre("blockTough", new ItemStack(NCBlocks.blockBlock, 1, 7));
+		OreDictionary.registerOre("blockLithium", new ItemStack(NCBlocks.blockBlock, 1, 8));
+		OreDictionary.registerOre("blockBoron", new ItemStack(NCBlocks.blockBlock, 1, 9));
+		OreDictionary.registerOre("blockMagnesium", new ItemStack(NCBlocks.blockBlock, 1, 10));
+		OreDictionary.registerOre("blockGraphite", new ItemStack(NCBlocks.graphiteBlock));
+
+		// Parts Ore Dictionary
+		OreDictionary.registerOre("plateBasic", new ItemStack(NCItems.parts, 1, 0));
+		OreDictionary.registerOre("plateIron", new ItemStack(NCItems.parts, 1, 1));
+		OreDictionary.registerOre("plateReinforced", new ItemStack(NCItems.parts, 1, 3));
+		OreDictionary.registerOre("universalReactant", new ItemStack(NCItems.parts, 1, 4));
+		OreDictionary.registerOre("plateTin", new ItemStack(NCItems.parts, 1, 6));
+		OreDictionary.registerOre("plateDU", new ItemStack(NCItems.parts, 1, 8));
+		OreDictionary.registerOre("plateAdvanced", new ItemStack(NCItems.parts, 1, 9));
+		OreDictionary.registerOre("plateLead", new ItemStack(NCItems.parts, 1, 14));
+
+		// Fission Fuel Materials Ore Dictionary
+		OreDictionary.registerOre("U238", new ItemStack(NCItems.material, 1, 24));
+		OreDictionary.registerOre("U238Base", new ItemStack(NCItems.material, 1, 24));
+		OreDictionary.registerOre("U238", new ItemStack(NCItems.material, 1, 55));
+		OreDictionary.registerOre("U238Oxide", new ItemStack(NCItems.material, 1, 55));
+		OreDictionary.registerOre("tinyU238", new ItemStack(NCItems.material, 1, 25));
+		OreDictionary.registerOre("tinyU238Base", new ItemStack(NCItems.material, 1, 25));
+		OreDictionary.registerOre("tinyU238", new ItemStack(NCItems.material, 1, 56));
+		OreDictionary.registerOre("tinyU238Oxide", new ItemStack(NCItems.material, 1, 56));
+
+		OreDictionary.registerOre("U235", new ItemStack(NCItems.material, 1, 26));
+		OreDictionary.registerOre("U235Base", new ItemStack(NCItems.material, 1, 26));
+		OreDictionary.registerOre("U235", new ItemStack(NCItems.material, 1, 57));
+		OreDictionary.registerOre("U235Oxide", new ItemStack(NCItems.material, 1, 57));
+		OreDictionary.registerOre("tinyU235", new ItemStack(NCItems.material, 1, 27));
+		OreDictionary.registerOre("tinyU235Base", new ItemStack(NCItems.material, 1, 27));
+		OreDictionary.registerOre("tinyU235", new ItemStack(NCItems.material, 1, 58));
+		OreDictionary.registerOre("tinyU235Oxide", new ItemStack(NCItems.material, 1, 58));
+
+		OreDictionary.registerOre("U233", new ItemStack(NCItems.material, 1, 28));
+		OreDictionary.registerOre("U233Base", new ItemStack(NCItems.material, 1, 28));
+		OreDictionary.registerOre("U233", new ItemStack(NCItems.material, 1, 59));
+		OreDictionary.registerOre("U233Oxide", new ItemStack(NCItems.material, 1, 59));
+		OreDictionary.registerOre("tinyU233", new ItemStack(NCItems.material, 1, 29));
+		OreDictionary.registerOre("tinyU233Base", new ItemStack(NCItems.material, 1, 29));
+		OreDictionary.registerOre("tinyU233", new ItemStack(NCItems.material, 1, 60));
+		OreDictionary.registerOre("tinyU233Oxide", new ItemStack(NCItems.material, 1, 60));
+
+		OreDictionary.registerOre("Pu238", new ItemStack(NCItems.material, 1, 30));
+		OreDictionary.registerOre("Pu238Base", new ItemStack(NCItems.material, 1, 30));
+		OreDictionary.registerOre("Pu238", new ItemStack(NCItems.material, 1, 61));
+		OreDictionary.registerOre("Pu238Oxide", new ItemStack(NCItems.material, 1, 61));
+		OreDictionary.registerOre("tinyPu238", new ItemStack(NCItems.material, 1, 31));
+		OreDictionary.registerOre("tinyPu238Base", new ItemStack(NCItems.material, 1, 31));
+		OreDictionary.registerOre("tinyPu238", new ItemStack(NCItems.material, 1, 62));
+		OreDictionary.registerOre("tinyPu238Oxide", new ItemStack(NCItems.material, 1, 62));
+
+		OreDictionary.registerOre("Pu239", new ItemStack(NCItems.material, 1, 32));
+		OreDictionary.registerOre("Pu239Base", new ItemStack(NCItems.material, 1, 32));
+		OreDictionary.registerOre("Pu239", new ItemStack(NCItems.material, 1, 63));
+		OreDictionary.registerOre("Pu239Oxide", new ItemStack(NCItems.material, 1, 63));
+		OreDictionary.registerOre("tinyPu239", new ItemStack(NCItems.material, 1, 33));
+		OreDictionary.registerOre("tinyPu239Base", new ItemStack(NCItems.material, 1, 33));
+		OreDictionary.registerOre("tinyPu239", new ItemStack(NCItems.material, 1, 64));
+		OreDictionary.registerOre("tinyPu239Oxide", new ItemStack(NCItems.material, 1, 64));
+
+		OreDictionary.registerOre("Pu242", new ItemStack(NCItems.material, 1, 34));
+		OreDictionary.registerOre("Pu242Base", new ItemStack(NCItems.material, 1, 34));
+		OreDictionary.registerOre("Pu242", new ItemStack(NCItems.material, 1, 65));
+		OreDictionary.registerOre("Pu242Oxide", new ItemStack(NCItems.material, 1, 65));
+		OreDictionary.registerOre("tinyPu242", new ItemStack(NCItems.material, 1, 35));
+		OreDictionary.registerOre("tinyPu242Base", new ItemStack(NCItems.material, 1, 35));
+		OreDictionary.registerOre("tinyPu242", new ItemStack(NCItems.material, 1, 66));
+		OreDictionary.registerOre("tinyPu242Oxide", new ItemStack(NCItems.material, 1, 66));
+
+		OreDictionary.registerOre("Pu241", new ItemStack(NCItems.material, 1, 36));
+		OreDictionary.registerOre("Pu241Base", new ItemStack(NCItems.material, 1, 36));
+		OreDictionary.registerOre("Pu241", new ItemStack(NCItems.material, 1, 67));
+		OreDictionary.registerOre("Pu241Oxide", new ItemStack(NCItems.material, 1, 67));
+		OreDictionary.registerOre("tinyPu241", new ItemStack(NCItems.material, 1, 37));
+		OreDictionary.registerOre("tinyPu241Base", new ItemStack(NCItems.material, 1, 37));
+		OreDictionary.registerOre("tinyPu241", new ItemStack(NCItems.material, 1, 68));
+		OreDictionary.registerOre("tinyPu241Oxide", new ItemStack(NCItems.material, 1, 68));
+
+		OreDictionary.registerOre("Th232", new ItemStack(NCItems.material, 1, 38));
+		OreDictionary.registerOre("Th232Base", new ItemStack(NCItems.material, 1, 38));
+		OreDictionary.registerOre("Th232", new ItemStack(NCItems.material, 1, 82));
+		OreDictionary.registerOre("Th232Oxide", new ItemStack(NCItems.material, 1, 82));
+		OreDictionary.registerOre("tinyTh232", new ItemStack(NCItems.material, 1, 39));
+		OreDictionary.registerOre("tinyTh232Base", new ItemStack(NCItems.material, 1, 39));
+		OreDictionary.registerOre("tinyTh232", new ItemStack(NCItems.material, 1, 83));
+		OreDictionary.registerOre("tinyTh232Oxide", new ItemStack(NCItems.material, 1, 83));
+
+		OreDictionary.registerOre("Th230", new ItemStack(NCItems.material, 1, 40));
+		OreDictionary.registerOre("Th230Base", new ItemStack(NCItems.material, 1, 40));
+		OreDictionary.registerOre("Th230", new ItemStack(NCItems.material, 1, 84));
+		OreDictionary.registerOre("Th230Oxide", new ItemStack(NCItems.material, 1, 84));
+		OreDictionary.registerOre("tinyTh230", new ItemStack(NCItems.material, 1, 41));
+		OreDictionary.registerOre("tinyTh230Base", new ItemStack(NCItems.material, 1, 41));
+		OreDictionary.registerOre("tinyTh230", new ItemStack(NCItems.material, 1, 85));
+		OreDictionary.registerOre("tinyTh230Oxide", new ItemStack(NCItems.material, 1, 85));
+
+		OreDictionary.registerOre("Np236", new ItemStack(NCItems.material, 1, 86));
+		OreDictionary.registerOre("Np236Base", new ItemStack(NCItems.material, 1, 86));
+		OreDictionary.registerOre("Np236", new ItemStack(NCItems.material, 1, 104));
+		OreDictionary.registerOre("Np236Oxide", new ItemStack(NCItems.material, 1, 104));
+		OreDictionary.registerOre("tinyNp236", new ItemStack(NCItems.material, 1, 87));
+		OreDictionary.registerOre("tinyNp236Base", new ItemStack(NCItems.material, 1, 87));
+		OreDictionary.registerOre("tinyNp236", new ItemStack(NCItems.material, 1, 105));
+		OreDictionary.registerOre("tinyNp236Oxide", new ItemStack(NCItems.material, 1, 105));
+
+		OreDictionary.registerOre("Np237", new ItemStack(NCItems.material, 1, 88));
+		OreDictionary.registerOre("Np237Base", new ItemStack(NCItems.material, 1, 88));
+		OreDictionary.registerOre("Np237", new ItemStack(NCItems.material, 1, 106));
+		OreDictionary.registerOre("Np237Oxide", new ItemStack(NCItems.material, 1, 106));
+		OreDictionary.registerOre("tinyNp237", new ItemStack(NCItems.material, 1, 89));
+		OreDictionary.registerOre("tinyNp237Base", new ItemStack(NCItems.material, 1, 89));
+		OreDictionary.registerOre("tinyNp237", new ItemStack(NCItems.material, 1, 107));
+		OreDictionary.registerOre("tinyNp237Oxide", new ItemStack(NCItems.material, 1, 107));
+
+		OreDictionary.registerOre("Am241", new ItemStack(NCItems.material, 1, 90));
+		OreDictionary.registerOre("Am241Base", new ItemStack(NCItems.material, 1, 90));
+		OreDictionary.registerOre("Am241", new ItemStack(NCItems.material, 1, 108));
+		OreDictionary.registerOre("Am241Oxide", new ItemStack(NCItems.material, 1, 108));
+		OreDictionary.registerOre("tinyAm241", new ItemStack(NCItems.material, 1, 91));
+		OreDictionary.registerOre("tinyAm241Base", new ItemStack(NCItems.material, 1, 91));
+		OreDictionary.registerOre("tinyAm241", new ItemStack(NCItems.material, 1, 109));
+		OreDictionary.registerOre("tinyAm241Oxide", new ItemStack(NCItems.material, 1, 109));
+
+		OreDictionary.registerOre("Am242", new ItemStack(NCItems.material, 1, 92));
+		OreDictionary.registerOre("Am242Base", new ItemStack(NCItems.material, 1, 92));
+		OreDictionary.registerOre("Am242", new ItemStack(NCItems.material, 1, 110));
+		OreDictionary.registerOre("Am242Oxide", new ItemStack(NCItems.material, 1, 110));
+		OreDictionary.registerOre("tinyAm242", new ItemStack(NCItems.material, 1, 93));
+		OreDictionary.registerOre("tinyAm242Base", new ItemStack(NCItems.material, 1, 93));
+		OreDictionary.registerOre("tinyAm242", new ItemStack(NCItems.material, 1, 111));
+		OreDictionary.registerOre("tinyAm242Oxide", new ItemStack(NCItems.material, 1, 111));
+
+		OreDictionary.registerOre("Am243", new ItemStack(NCItems.material, 1, 94));
+		OreDictionary.registerOre("Am243Base", new ItemStack(NCItems.material, 1, 94));
+		OreDictionary.registerOre("Am243", new ItemStack(NCItems.material, 1, 112));
+		OreDictionary.registerOre("Am243Oxide", new ItemStack(NCItems.material, 1, 112));
+		OreDictionary.registerOre("tinyAm243", new ItemStack(NCItems.material, 1, 95));
+		OreDictionary.registerOre("tinyAm243Base", new ItemStack(NCItems.material, 1, 95));
+		OreDictionary.registerOre("tinyAm243", new ItemStack(NCItems.material, 1, 113));
+		OreDictionary.registerOre("tinyAm243Oxide", new ItemStack(NCItems.material, 1, 113));
+
+		OreDictionary.registerOre("Cm243", new ItemStack(NCItems.material, 1, 96));
+		OreDictionary.registerOre("Cm243Base", new ItemStack(NCItems.material, 1, 96));
+		OreDictionary.registerOre("Cm243", new ItemStack(NCItems.material, 1, 114));
+		OreDictionary.registerOre("Cm243Oxide", new ItemStack(NCItems.material, 1, 114));
+		OreDictionary.registerOre("tinyCm243", new ItemStack(NCItems.material, 1, 97));
+		OreDictionary.registerOre("tinyCm243Base", new ItemStack(NCItems.material, 1, 97));
+		OreDictionary.registerOre("tinyCm243", new ItemStack(NCItems.material, 1, 115));
+		OreDictionary.registerOre("tinyCm243Oxide", new ItemStack(NCItems.material, 1, 115));
+
+		OreDictionary.registerOre("Cm245", new ItemStack(NCItems.material, 1, 98));
+		OreDictionary.registerOre("Cm245Base", new ItemStack(NCItems.material, 1, 98));
+		OreDictionary.registerOre("Cm245", new ItemStack(NCItems.material, 1, 116));
+		OreDictionary.registerOre("Cm245Oxide", new ItemStack(NCItems.material, 1, 116));
+		OreDictionary.registerOre("tinyCm245", new ItemStack(NCItems.material, 1, 99));
+		OreDictionary.registerOre("tinyCm245Base", new ItemStack(NCItems.material, 1, 99));
+		OreDictionary.registerOre("tinyCm245", new ItemStack(NCItems.material, 1, 117));
+		OreDictionary.registerOre("tinyCm245Oxide", new ItemStack(NCItems.material, 1, 117));
+
+		OreDictionary.registerOre("Cm246", new ItemStack(NCItems.material, 1, 100));
+		OreDictionary.registerOre("Cm246Base", new ItemStack(NCItems.material, 1, 100));
+		OreDictionary.registerOre("Cm246", new ItemStack(NCItems.material, 1, 118));
+		OreDictionary.registerOre("Cm246Oxide", new ItemStack(NCItems.material, 1, 118));
+		OreDictionary.registerOre("tinyCm246", new ItemStack(NCItems.material, 1, 101));
+		OreDictionary.registerOre("tinyCm246Base", new ItemStack(NCItems.material, 1, 101));
+		OreDictionary.registerOre("tinyCm246", new ItemStack(NCItems.material, 1, 119));
+		OreDictionary.registerOre("tinyCm246Oxide", new ItemStack(NCItems.material, 1, 119));
+
+		OreDictionary.registerOre("Cm247", new ItemStack(NCItems.material, 1, 102));
+		OreDictionary.registerOre("Cm247Base", new ItemStack(NCItems.material, 1, 102));
+		OreDictionary.registerOre("Cm247", new ItemStack(NCItems.material, 1, 120));
+		OreDictionary.registerOre("Cm247Oxide", new ItemStack(NCItems.material, 1, 120));
+		OreDictionary.registerOre("tinyCm247", new ItemStack(NCItems.material, 1, 103));
+		OreDictionary.registerOre("tinyCm247Base", new ItemStack(NCItems.material, 1, 103));
+		OreDictionary.registerOre("tinyCm247", new ItemStack(NCItems.material, 1, 121));
+		OreDictionary.registerOre("tinyCm247Oxide", new ItemStack(NCItems.material, 1, 121));
+
+		OreDictionary.registerOre("Cf250", new ItemStack(NCItems.material, 1, 122));
+		OreDictionary.registerOre("Cf250Base", new ItemStack(NCItems.material, 1, 122));
+		OreDictionary.registerOre("Cf250", new ItemStack(NCItems.material, 1, 124));
+		OreDictionary.registerOre("Cf250Oxide", new ItemStack(NCItems.material, 1, 124));
+		OreDictionary.registerOre("tinyCf250", new ItemStack(NCItems.material, 1, 123));
+		OreDictionary.registerOre("tinyCf250Base", new ItemStack(NCItems.material, 1, 123));
+		OreDictionary.registerOre("tinyCf250", new ItemStack(NCItems.material, 1, 125));
+		OreDictionary.registerOre("tinyCf250Oxide", new ItemStack(NCItems.material, 1, 125));
+
+		// Lithium and Boron Isotopes
+		OreDictionary.registerOre("Li6", new ItemStack(NCItems.material, 1, 46));
+		OreDictionary.registerOre("tinyLi6", new ItemStack(NCItems.material, 1, 69));
+		OreDictionary.registerOre("Li7", new ItemStack(NCItems.material, 1, 47));
+		OreDictionary.registerOre("B10", new ItemStack(NCItems.material, 1, 48));
+		OreDictionary.registerOre("tinyB10", new ItemStack(NCItems.material, 1, 70));
+		OreDictionary.registerOre("B11", new ItemStack(NCItems.material, 1, 49));
+
+		// Fission Fuels Ore Dictionary
+		OreDictionary.registerOre("LEU235", new ItemStack(NCItems.fuel, 1, 0));
+		OreDictionary.registerOre("LEU235Oxide", new ItemStack(NCItems.fuel, 1, 51));
+		OreDictionary.registerOre("LEU235Cell", new ItemStack(NCItems.fuel, 1, 11));
+		OreDictionary.registerOre("LEU235CellOxide", new ItemStack(NCItems.fuel, 1, 59));
+		OreDictionary.registerOre("dLEU235Cell", new ItemStack(NCItems.fuel, 1, 22));
+		OreDictionary.registerOre("dLEU235CellOxide", new ItemStack(NCItems.fuel, 1, 67));
+
+		OreDictionary.registerOre("HEU235", new ItemStack(NCItems.fuel, 1, 1));
+		OreDictionary.registerOre("HEU235Oxide", new ItemStack(NCItems.fuel, 1, 52));
+		OreDictionary.registerOre("HEU235Cell", new ItemStack(NCItems.fuel, 1, 12));
+		OreDictionary.registerOre("HEU235CellOxide", new ItemStack(NCItems.fuel, 1, 60));
+		OreDictionary.registerOre("dHEU235Cell", new ItemStack(NCItems.fuel, 1, 23));
+		OreDictionary.registerOre("dHEU235CellOxide", new ItemStack(NCItems.fuel, 1, 68));
+
+		OreDictionary.registerOre("LEP239", new ItemStack(NCItems.fuel, 1, 2));
+		OreDictionary.registerOre("LEP239Oxide", new ItemStack(NCItems.fuel, 1, 53));
+		OreDictionary.registerOre("LEP239Cell", new ItemStack(NCItems.fuel, 1, 13));
+		OreDictionary.registerOre("LEP239CellOxide", new ItemStack(NCItems.fuel, 1, 61));
+		OreDictionary.registerOre("dLEP239Cell", new ItemStack(NCItems.fuel, 1, 24));
+		OreDictionary.registerOre("dLEP239CellOxide", new ItemStack(NCItems.fuel, 1, 69));
+
+		OreDictionary.registerOre("HEP239", new ItemStack(NCItems.fuel, 1, 3));
+		OreDictionary.registerOre("HEP239Oxide", new ItemStack(NCItems.fuel, 1, 54));
+		OreDictionary.registerOre("HEP239Cell", new ItemStack(NCItems.fuel, 1, 14));
+		OreDictionary.registerOre("HEP239CellOxide", new ItemStack(NCItems.fuel, 1, 62));
+		OreDictionary.registerOre("dHEP239Cell", new ItemStack(NCItems.fuel, 1, 25));
+		OreDictionary.registerOre("dHEP239CellOxide", new ItemStack(NCItems.fuel, 1, 70));
+
+		OreDictionary.registerOre("MOX239", new ItemStack(NCItems.fuel, 1, 4));
+		OreDictionary.registerOre("MOX239Cell", new ItemStack(NCItems.fuel, 1, 15));
+		OreDictionary.registerOre("dMOX239Cell", new ItemStack(NCItems.fuel, 1, 26));
+
+		OreDictionary.registerOre("TBU", new ItemStack(NCItems.fuel, 1, 5));
+		OreDictionary.registerOre("TBUOxide", new ItemStack(NCItems.fuel, 1, 76));
+		OreDictionary.registerOre("TBUCell", new ItemStack(NCItems.fuel, 1, 16));
+		OreDictionary.registerOre("TBUCellOxide", new ItemStack(NCItems.fuel, 1, 77));
+		OreDictionary.registerOre("dTBUCell", new ItemStack(NCItems.fuel, 1, 27));
+		OreDictionary.registerOre("dTBUCellOxide", new ItemStack(NCItems.fuel, 1, 78));
+
+		OreDictionary.registerOre("LEU233", new ItemStack(NCItems.fuel, 1, 6));
+		OreDictionary.registerOre("LEU233Oxide", new ItemStack(NCItems.fuel, 1, 55));
+		OreDictionary.registerOre("LEU233Cell", new ItemStack(NCItems.fuel, 1, 17));
+		OreDictionary.registerOre("LEU233CellOxide", new ItemStack(NCItems.fuel, 1, 63));
+		OreDictionary.registerOre("dLEU233Cell", new ItemStack(NCItems.fuel, 1, 28));
+		OreDictionary.registerOre("dLEU233CellOxide", new ItemStack(NCItems.fuel, 1, 71));
+
+		OreDictionary.registerOre("HEU233", new ItemStack(NCItems.fuel, 1, 7));
+		OreDictionary.registerOre("HEU233Oxide", new ItemStack(NCItems.fuel, 1, 56));
+		OreDictionary.registerOre("HEU233Cell", new ItemStack(NCItems.fuel, 1, 18));
+		OreDictionary.registerOre("HEU233CellOxide", new ItemStack(NCItems.fuel, 1, 64));
+		OreDictionary.registerOre("dHEU233Cell", new ItemStack(NCItems.fuel, 1, 29));
+		OreDictionary.registerOre("dHEU233CellOxide", new ItemStack(NCItems.fuel, 1, 72));
+
+		OreDictionary.registerOre("LEP241", new ItemStack(NCItems.fuel, 1, 8));
+		OreDictionary.registerOre("LEP241Oxide", new ItemStack(NCItems.fuel, 1, 57));
+		OreDictionary.registerOre("LEP241Cell", new ItemStack(NCItems.fuel, 1, 19));
+		OreDictionary.registerOre("LEP241CellOxide", new ItemStack(NCItems.fuel, 1, 65));
+		OreDictionary.registerOre("dLEP241Cell", new ItemStack(NCItems.fuel, 1, 30));
+		OreDictionary.registerOre("dLEP241CellOxide", new ItemStack(NCItems.fuel, 1, 73));
+
+		OreDictionary.registerOre("HEP241", new ItemStack(NCItems.fuel, 1, 9));
+		OreDictionary.registerOre("HEP241Oxide", new ItemStack(NCItems.fuel, 1, 58));
+		OreDictionary.registerOre("HEP241Cell", new ItemStack(NCItems.fuel, 1, 20));
+		OreDictionary.registerOre("HEP241CellOxide", new ItemStack(NCItems.fuel, 1, 66));
+		OreDictionary.registerOre("dHEP241Cell", new ItemStack(NCItems.fuel, 1, 31));
+		OreDictionary.registerOre("dHEP241CellOxide", new ItemStack(NCItems.fuel, 1, 74));
+
+		OreDictionary.registerOre("MOX241", new ItemStack(NCItems.fuel, 1, 10));
+		OreDictionary.registerOre("MOX241Cell", new ItemStack(NCItems.fuel, 1, 21));
+		OreDictionary.registerOre("dMOX241Cell", new ItemStack(NCItems.fuel, 1, 32));
+
+		OreDictionary.registerOre("LEN236", new ItemStack(NCItems.fuel, 1, 79));
+		OreDictionary.registerOre("LEN236Oxide", new ItemStack(NCItems.fuel, 1, 89));
+		OreDictionary.registerOre("LEN236Cell", new ItemStack(NCItems.fuel, 1, 99));
+		OreDictionary.registerOre("LEN236CellOxide", new ItemStack(NCItems.fuel, 1, 109));
+		OreDictionary.registerOre("dLEN236Cell", new ItemStack(NCItems.fuel, 1, 119));
+		OreDictionary.registerOre("dLEN236CellOxide", new ItemStack(NCItems.fuel, 1, 129));
+
+		OreDictionary.registerOre("HEN236", new ItemStack(NCItems.fuel, 1, 80));
+		OreDictionary.registerOre("HEN236Oxide", new ItemStack(NCItems.fuel, 1, 90));
+		OreDictionary.registerOre("HEN236Cell", new ItemStack(NCItems.fuel, 1, 100));
+		OreDictionary.registerOre("HEN236CellOxide", new ItemStack(NCItems.fuel, 1, 110));
+		OreDictionary.registerOre("dHEN236Cell", new ItemStack(NCItems.fuel, 1, 120));
+		OreDictionary.registerOre("dHEN236CellOxide", new ItemStack(NCItems.fuel, 1, 130));
+
+		OreDictionary.registerOre("LEA242", new ItemStack(NCItems.fuel, 1, 81));
+		OreDictionary.registerOre("LEA242Oxide", new ItemStack(NCItems.fuel, 1, 91));
+		OreDictionary.registerOre("LEA242Cell", new ItemStack(NCItems.fuel, 1, 101));
+		OreDictionary.registerOre("LEA242CellOxide", new ItemStack(NCItems.fuel, 1, 111));
+		OreDictionary.registerOre("dLEA242Cell", new ItemStack(NCItems.fuel, 1, 121));
+		OreDictionary.registerOre("dLEA242CellOxide", new ItemStack(NCItems.fuel, 1, 131));
+
+		OreDictionary.registerOre("HEA242", new ItemStack(NCItems.fuel, 1, 82));
+		OreDictionary.registerOre("HEA242Oxide", new ItemStack(NCItems.fuel, 1, 92));
+		OreDictionary.registerOre("HEA242Cell", new ItemStack(NCItems.fuel, 1, 102));
+		OreDictionary.registerOre("HEA242CellOxide", new ItemStack(NCItems.fuel, 1, 112));
+		OreDictionary.registerOre("dHEA242Cell", new ItemStack(NCItems.fuel, 1, 122));
+		OreDictionary.registerOre("dHEA242CellOxide", new ItemStack(NCItems.fuel, 1, 132));
+
+		OreDictionary.registerOre("LEC243", new ItemStack(NCItems.fuel, 1, 83));
+		OreDictionary.registerOre("LEC243Oxide", new ItemStack(NCItems.fuel, 1, 93));
+		OreDictionary.registerOre("LEC243Cell", new ItemStack(NCItems.fuel, 1, 103));
+		OreDictionary.registerOre("LEC243CellOxide", new ItemStack(NCItems.fuel, 1, 113));
+		OreDictionary.registerOre("dLEC243Cell", new ItemStack(NCItems.fuel, 1, 123));
+		OreDictionary.registerOre("dLEC243CellOxide", new ItemStack(NCItems.fuel, 1, 133));
+
+		OreDictionary.registerOre("HEC243", new ItemStack(NCItems.fuel, 1, 84));
+		OreDictionary.registerOre("HEC243Oxide", new ItemStack(NCItems.fuel, 1, 94));
+		OreDictionary.registerOre("HEC243Cell", new ItemStack(NCItems.fuel, 1, 104));
+		OreDictionary.registerOre("HEC243CellOxide", new ItemStack(NCItems.fuel, 1, 114));
+		OreDictionary.registerOre("dHEC243Cell", new ItemStack(NCItems.fuel, 1, 124));
+		OreDictionary.registerOre("dHEC243CellOxide", new ItemStack(NCItems.fuel, 1, 134));
+
+		OreDictionary.registerOre("LEC245", new ItemStack(NCItems.fuel, 1, 85));
+		OreDictionary.registerOre("LEC245Oxide", new ItemStack(NCItems.fuel, 1, 95));
+		OreDictionary.registerOre("LEC245Cell", new ItemStack(NCItems.fuel, 1, 105));
+		OreDictionary.registerOre("LEC245CellOxide", new ItemStack(NCItems.fuel, 1, 115));
+		OreDictionary.registerOre("dLEC245Cell", new ItemStack(NCItems.fuel, 1, 125));
+		OreDictionary.registerOre("dLEC245CellOxide", new ItemStack(NCItems.fuel, 1, 135));
+
+		OreDictionary.registerOre("HEC245", new ItemStack(NCItems.fuel, 1, 86));
+		OreDictionary.registerOre("HEC245Oxide", new ItemStack(NCItems.fuel, 1, 96));
+		OreDictionary.registerOre("HEC245Cell", new ItemStack(NCItems.fuel, 1, 106));
+		OreDictionary.registerOre("HEC245CellOxide", new ItemStack(NCItems.fuel, 1, 116));
+		OreDictionary.registerOre("dHEC245Cell", new ItemStack(NCItems.fuel, 1, 126));
+		OreDictionary.registerOre("dHEC245CellOxide", new ItemStack(NCItems.fuel, 1, 136));
+
+		OreDictionary.registerOre("LEC247", new ItemStack(NCItems.fuel, 1, 87));
+		OreDictionary.registerOre("LEC247Oxide", new ItemStack(NCItems.fuel, 1, 97));
+		OreDictionary.registerOre("LEC247Cell", new ItemStack(NCItems.fuel, 1, 107));
+		OreDictionary.registerOre("LEC247CellOxide", new ItemStack(NCItems.fuel, 1, 117));
+		OreDictionary.registerOre("dLEC247Cell", new ItemStack(NCItems.fuel, 1, 127));
+		OreDictionary.registerOre("dLEC247CellOxide", new ItemStack(NCItems.fuel, 1, 137));
+
+		OreDictionary.registerOre("HEC247", new ItemStack(NCItems.fuel, 1, 88));
+		OreDictionary.registerOre("HEC247Oxide", new ItemStack(NCItems.fuel, 1, 98));
+		OreDictionary.registerOre("HEC247Cell", new ItemStack(NCItems.fuel, 1, 108));
+		OreDictionary.registerOre("HEC247CellOxide", new ItemStack(NCItems.fuel, 1, 118));
+		OreDictionary.registerOre("dHEC247Cell", new ItemStack(NCItems.fuel, 1, 128));
+		OreDictionary.registerOre("dHEC247CellOxide", new ItemStack(NCItems.fuel, 1, 138));
+
+		// Vanilla Ore Dictionary
+		OreDictionary.registerOre("gemCoal", new ItemStack(Items.coal, 1));
+		OreDictionary.registerOre("oreObsidian", new ItemStack(Blocks.obsidian, 1));
+
+		// Filled Fluid Cell Dictionary
+		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 34));
+		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 35));
+		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 36));
+		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 37));
+		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 38));
+		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 39));
+		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 40));
+		OreDictionary.registerOre("deuteriumCell", new ItemStack(NCItems.fuel, 1, 37));
+
+		// Record Ore Dictionary
+		OreDictionary.registerOre("record", new ItemStack(NCItems.recordPractice, 1));
+		OreDictionary.registerOre("record", new ItemStack(NCItems.recordArea51, 1));
+		OreDictionary.registerOre("record", new ItemStack(NCItems.recordNeighborhood, 1));
+
+		//Railcraft Integration
+		ItemStack railcraftConcrete = GameRegistry.findItemStack("Railcraft", "cube", 1);
+
+		if (railcraftConcrete != null) {
+			railcraftConcrete.setItemDamage(1);
+			OreDictionary.registerOre("blockConcrete", railcraftConcrete);
+		}
+
+		//Gas Registry
+		GasRegistry.register(new Gas("uranium238")).registerFluid();
+		GasRegistry.register(new Gas("boron10")).registerFluid();
+
+		//Register Gasifyables Items
+		GasifyableItems.registerGasifyables("deuteriumCell", GasRegistry.getGas("deuterium"), 1000);
+		GasifyableItems.registerGasifyables("U238", GasRegistry.getGas("uranium238"), 200);
+		GasifyableItems.registerGasifyables("B10", GasRegistry.getGas("boron10"), 200);
+
+
 		// Random Chest Loot
 		if (enableLoot) {
 			ChestGenHooks.getInfo(ChestGenHooks.DUNGEON_CHEST).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.recordPractice, 1), 1, 1, 2*lootModifier));
@@ -1620,29 +1974,10 @@ public class NuclearCraft {
 			ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.recordArea51, 1), 1, 1, lootModifier));
 			ChestGenHooks.getInfo(ChestGenHooks.MINESHAFT_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.recordNeighborhood, 1), 1, 1, lootModifier));
 
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 9), 4, 6, 4*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 16), 7, 8, 4*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 17), 7, 8, 4*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 0), 7, 8, 4*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 4), 7, 8, 4*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CORRIDOR).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 14), 6, 8, 4*lootModifier));
-			
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CROSSING).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 9), 2, 4, lootModifier));
 			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CROSSING).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.recordPractice, 1), 1, 1, 2*lootModifier));
 			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CROSSING).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.recordArea51, 1), 1, 1, 2*lootModifier));
 			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CROSSING).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.recordNeighborhood, 1), 1, 1, 2*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CROSSING).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 16), 4, 8, 4*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CROSSING).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 17), 4, 8, 4*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CROSSING).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 0), 4, 8, 4*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CROSSING).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 4), 4, 8, 4*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_CROSSING).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.parts, 1, 14), 6, 8, 4*lootModifier));
-			
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.fuel, 1, 46), 1, 1, 3*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.fuel, 1, 75), 4, 5, 7*lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(new WeightedRandomChestContent(new ItemStack(NCBlocks.RTG, 1), 1, 1, lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.fuel, 1, 49), 2, 4, lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.fuel, 1, 50), 2, 4, lootModifier));
-			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.fuel, 1, 47), 2, 4, lootModifier));
+
 			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.recordPractice, 1), 1, 1, lootModifier));
 			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.recordArea51, 1), 1, 1, lootModifier));
 			ChestGenHooks.getInfo(ChestGenHooks.STRONGHOLD_LIBRARY).addItem(new WeightedRandomChestContent(new ItemStack(NCItems.recordNeighborhood, 1), 1, 1, lootModifier));
@@ -1650,8 +1985,32 @@ public class NuclearCraft {
 		
 		// World Generation Registry
 		GameRegistry.registerWorldGenerator(new OreGen(), 1);
-		
+
 		// Inter Mod Comms - Mekanism
+			//Oxide Processing
+		addOxideRecipes();
+
+			//Advanced Plating
+		NBTTagCompound deuteriumFilling = new NBTTagCompound();
+		deuteriumFilling.setTag("input", new ItemStack(NCItems.parts, 1, 0).writeToNBT(new NBTTagCompound()));
+		deuteriumFilling.setTag("gasType", GasRegistry.getGas("deuterium").write(new NBTTagCompound()));
+		deuteriumFilling.setTag("output", new ItemStack(NCItems.parts, 1, 3).writeToNBT(new NBTTagCompound()));
+		FMLInterModComms.sendMessage("Mekanism", "ChemicalInjectionChamberRecipe", deuteriumFilling);
+
+			//Uranium Plating
+		NBTTagCompound uraniumFilling = new NBTTagCompound();
+		uraniumFilling.setTag("input", new ItemStack(NCItems.parts, 1, 0).writeToNBT(new NBTTagCompound()));
+		uraniumFilling.setTag("gasType", GasRegistry.getGas("uranium238").write(new NBTTagCompound()));
+		uraniumFilling.setTag("output", new ItemStack(NCItems.parts, 1, 8).writeToNBT(new NBTTagCompound()));
+		FMLInterModComms.sendMessage("Mekanism", "ChemicalInjectionChamberRecipe", uraniumFilling);
+
+			//Boron Plating
+		NBTTagCompound boronFilling = new NBTTagCompound();
+		boronFilling.setTag("input", new ItemStack(NCItems.parts, 1, 0).writeToNBT(new NBTTagCompound()));
+		boronFilling.setTag("gasType", GasRegistry.getGas("boron10").write(new NBTTagCompound()));
+		boronFilling.setTag("output", new ItemStack(NCItems.parts, 1, 9).writeToNBT(new NBTTagCompound()));
+		FMLInterModComms.sendMessage("Mekanism", "ChemicalInjectionChamberRecipe", boronFilling);
+
 		NBTTagCompound copperOreEnrichment = new NBTTagCompound();
 		copperOreEnrichment.setTag("input", new ItemStack(NCBlocks.blockOre, 1, 0).writeToNBT(new NBTTagCompound()));
 		copperOreEnrichment.setTag("output", new ItemStack(NCItems.material, 2, 15).writeToNBT(new NBTTagCompound()));
@@ -1701,17 +2060,7 @@ public class NuclearCraft {
 		magnesiumOreEnrichment.setTag("input", new ItemStack(NCBlocks.blockOre, 1, 9).writeToNBT(new NBTTagCompound()));
 		magnesiumOreEnrichment.setTag("output", new ItemStack(NCItems.material, 2, 51).writeToNBT(new NBTTagCompound()));
 		FMLInterModComms.sendMessage("Mekanism", "EnrichmentChamberRecipe", magnesiumOreEnrichment);
-		
-		NBTTagCompound basicplateEnrichment = new NBTTagCompound();
-		basicplateEnrichment.setTag("input", new ItemStack(NCItems.parts, workspace ? 4 : 8, 0).writeToNBT(new NBTTagCompound()));
-		basicplateEnrichment.setTag("output", new ItemStack(NCItems.parts, 1, 3).writeToNBT(new NBTTagCompound()));
-		FMLInterModComms.sendMessage("Mekanism", "EnrichmentChamberRecipe", basicplateEnrichment);
-		
-		NBTTagCompound ingotToplateEnrichment = new NBTTagCompound();
-		ingotToplateEnrichment.setTag("input", new ItemStack(NCItems.material, 1, 7).writeToNBT(new NBTTagCompound()));
-		ingotToplateEnrichment.setTag("output", new ItemStack(NCItems.parts, 2, 0).writeToNBT(new NBTTagCompound()));
-		FMLInterModComms.sendMessage("Mekanism", "EnrichmentChamberRecipe", ingotToplateEnrichment);
-		
+
 		NBTTagCompound uraniumIngotCrushing = new NBTTagCompound();
 		uraniumIngotCrushing.setTag("input", new ItemStack(NCItems.material, 1, 4).writeToNBT(new NBTTagCompound()));
 		uraniumIngotCrushing.setTag("output", new ItemStack(NCItems.material, 1, 19).writeToNBT(new NBTTagCompound()));
@@ -1781,7 +2130,11 @@ public class NuclearCraft {
 		LiMnO2IngotCrushing.setTag("input", new ItemStack(NCItems.material, 1, 80).writeToNBT(new NBTTagCompound()));
 		LiMnO2IngotCrushing.setTag("output", new ItemStack(NCItems.material, 1, 81).writeToNBT(new NBTTagCompound()));
 		FMLInterModComms.sendMessage("Mekanism", "CrusherRecipe", LiMnO2IngotCrushing);
-		
+
+		for (ItemStack ore : OreDictionary.getOres("dustCoal")) {
+			mekanism.api.recipe.RecipeHelper.addMetallurgicInfuserRecipe(InfuseRegistry.get("CARBON"), 20, StackUtils.size(ore, 1), new ItemStack(NCItems.material, 1, 77));
+		}
+
 		/*NBTTagCompound oxygenFilling = new NBTTagCompound();
 		oxygenFilling.setTag("input", new ItemStack(NCItems.fuel, 1, 45).writeToNBT(new NBTTagCompound()));
 		oxygenFilling.setTag("gasType", GasRegistry.getGas("oxygen").write(new NBTTagCompound()));
@@ -1848,11 +2201,41 @@ public class NuclearCraft {
 		
 		FMLInterModComms.sendMessage("appliedenergistics2", "whitelist-spatial", TileSimpleQuantum.class.getCanonicalName());
 	}
-	
-	public void s(Item item, int metaIn, int metaOut) {
-		GameRegistry.addSmelting(new ItemStack(item, 1, metaIn), new ItemStack(item, 1, metaOut), 0F);
+	public static void addOxideFuels(String oredict) {
+		ItemStack fuel = OreDictionary.getOres(oredict).get(0);
+		ItemStack fuelOxide = StackUtils.size(OreDictionary.getOres(oredict + "Oxide").get(0), 1);
+
+// 		# Faulty #
+//		NBTTagCompound oxideEnrichment = new NBTTagCompound();
+//		oxideEnrichment.setTag("input", fuel.writeToNBT(new NBTTagCompound()));
+//		oxideEnrichment.setTag("output", fuelOxide.writeToNBT(new NBTTagCompound()));
+//		FMLInterModComms.sendMessage("Mekanism", "PurificationChamberRecipe", oxideEnrichment);
+
+		mekanism.api.recipe.RecipeHelper.addPurificationChamberRecipe(fuel, fuelOxide);
 	}
-	
+
+	public static void addOxideRecipes(){
+		addOxideFuels("LEU235");
+		addOxideFuels("HEU235");
+		addOxideFuels("LEP239");
+		addOxideFuels("HEP239");
+		addOxideFuels("LEU233");
+		addOxideFuels("HEU233");
+		addOxideFuels("LEP241");
+		addOxideFuels("HEP241");
+		addOxideFuels("TBU");
+		addOxideFuels("LEN236");
+		addOxideFuels("HEN236");
+		addOxideFuels("LEA242");
+		addOxideFuels("HEA242");
+		addOxideFuels("LEC243");
+		addOxideFuels("HEC243");
+		addOxideFuels("LEC245");
+		addOxideFuels("HEC245");
+		addOxideFuels("LEC247");
+		addOxideFuels("HEC247");
+	}
+
 	public void b(int meta, String item) {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCBlocks.blockBlock, 1, meta), true, new Object[] {"XXX", "XXX", "XXX", 'X', item}));
 	}
@@ -1883,435 +2266,6 @@ public class NuclearCraft {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-
-
-
-		// Ores Ore Dictionary
-		OreDictionary.registerOre("oreUranium", new ItemStack(NCBlocks.blockOre, 1, 4));
-		OreDictionary.registerOre("oreCopper", new ItemStack(NCBlocks.blockOre, 1, 0));
-		OreDictionary.registerOre("oreTin", new ItemStack(NCBlocks.blockOre, 1, 1));
-		OreDictionary.registerOre("oreLead", new ItemStack(NCBlocks.blockOre, 1, 2));
-		OreDictionary.registerOre("oreSilver", new ItemStack(NCBlocks.blockOre, 1, 3));
-		OreDictionary.registerOre("oreThorium", new ItemStack(NCBlocks.blockOre, 1, 5));
-		OreDictionary.registerOre("orePlutonium", new ItemStack(NCBlocks.blockOre, 1, 6));
-		OreDictionary.registerOre("oreLithium", new ItemStack(NCBlocks.blockOre, 1, 7));
-		OreDictionary.registerOre("oreBoron", new ItemStack(NCBlocks.blockOre, 1, 8));
-		OreDictionary.registerOre("oreMagnesium", new ItemStack(NCBlocks.blockOre, 1, 9));
-		
-		// Items Ore Dictionary
-		OreDictionary.registerOre("ingotUranium", new ItemStack(NCItems.material, 1, 4));
-		OreDictionary.registerOre("ingotCopper", new ItemStack(NCItems.material, 1, 0));
-		OreDictionary.registerOre("ingotTin", new ItemStack(NCItems.material, 1, 1));
-		OreDictionary.registerOre("ingotLead", new ItemStack(NCItems.material, 1, 2));
-		OreDictionary.registerOre("ingotSilver", new ItemStack(NCItems.material, 1, 3));
-		OreDictionary.registerOre("ingotBronze", new ItemStack(NCItems.material, 1, 6));
-		OreDictionary.registerOre("ingotThorium", new ItemStack(NCItems.material, 1, 5));
-		OreDictionary.registerOre("ingotLithium", new ItemStack(NCItems.material, 1, 42));
-		OreDictionary.registerOre("ingotBoron", new ItemStack(NCItems.material, 1, 43));
-		OreDictionary.registerOre("ingotTough", new ItemStack(NCItems.material, 1, 7));
-		OreDictionary.registerOre("ingotMagnesium", new ItemStack(NCItems.material, 1, 50));
-		OreDictionary.registerOre("ingotUraniumOxide", new ItemStack(NCItems.material, 1, 53));
-		OreDictionary.registerOre("ingotThoriumOxide", new ItemStack(NCItems.material, 1, 126));
-		OreDictionary.registerOre("ingotMagnesiumDiboride", new ItemStack(NCItems.material, 1, 71));
-		OreDictionary.registerOre("gemRhodochrosite", new ItemStack(NCItems.material, 1, 73));
-		OreDictionary.registerOre("ingotGraphite", new ItemStack(NCItems.material, 1, 76));
-		OreDictionary.registerOre("ingotHardCarbon", new ItemStack(NCItems.material, 1, 78));
-		OreDictionary.registerOre("ingotLithiumManganeseDioxide", new ItemStack(NCItems.material, 1, 80));
-		
-		// Dusts Ore Dictionary
-		OreDictionary.registerOre("dustIron", new ItemStack(NCItems.material, 1, 8));
-		OreDictionary.registerOre("dustGold", new ItemStack(NCItems.material, 1, 9));
-		OreDictionary.registerOre("dustLapis", new ItemStack(NCItems.material, 1, 10));
-		OreDictionary.registerOre("dustDiamond", new ItemStack(NCItems.material, 1, 11));
-		OreDictionary.registerOre("dustEmerald", new ItemStack(NCItems.material, 1, 12));
-		OreDictionary.registerOre("dustQuartz", new ItemStack(NCItems.material, 1, 13));
-		OreDictionary.registerOre("dustCoal", new ItemStack(NCItems.material, 1, 14));
-		OreDictionary.registerOre("dustCopper", new ItemStack(NCItems.material, 1, 15));
-		OreDictionary.registerOre("dustLead", new ItemStack(NCItems.material, 1, 17));
-		OreDictionary.registerOre("dustTinyLead", new ItemStack(NCItems.material, 1, 23));
-		OreDictionary.registerOre("dustTin", new ItemStack(NCItems.material, 1, 16));
-		OreDictionary.registerOre("dustSilver", new ItemStack(NCItems.material, 1, 18));
-		OreDictionary.registerOre("dustUranium", new ItemStack(NCItems.material, 1, 19));
-		OreDictionary.registerOre("dustThorium", new ItemStack(NCItems.material, 1, 20));
-		OreDictionary.registerOre("dustBronze", new ItemStack(NCItems.material, 1, 21));
-		OreDictionary.registerOre("dustLithium", new ItemStack(NCItems.material, 1, 44));
-		OreDictionary.registerOre("dustBoron", new ItemStack(NCItems.material, 1, 45));
-		OreDictionary.registerOre("dustTough", new ItemStack(NCItems.material, 1, 22));
-		OreDictionary.registerOre("dustMagnesium", new ItemStack(NCItems.material, 1, 51));
-		OreDictionary.registerOre("dustObsidian", new ItemStack(NCItems.material, 1, 52));
-		OreDictionary.registerOre("dustUraniumOxide", new ItemStack(NCItems.material, 1, 54));
-		OreDictionary.registerOre("dustThoriumOxide", new ItemStack(NCItems.material, 1, 127));
-		OreDictionary.registerOre("dustMagnesiumDiboride", new ItemStack(NCItems.material, 1, 72));
-		OreDictionary.registerOre("dustManganeseOxide", new ItemStack(NCItems.material, 1, 74));
-		OreDictionary.registerOre("dustManganeseDioxide", new ItemStack(NCItems.material, 1, 75));
-		OreDictionary.registerOre("dustGraphite", new ItemStack(NCItems.material, 1, 77));
-		OreDictionary.registerOre("dustHardCarbon", new ItemStack(NCItems.material, 1, 79));
-		OreDictionary.registerOre("dustLithiumManganeseDioxide", new ItemStack(NCItems.material, 1, 81));
-		
-		// Blocks Ore Dictionary
-		OreDictionary.registerOre("blockUranium", new ItemStack(NCBlocks.blockBlock, 1, 4));
-		OreDictionary.registerOre("blockCopper", new ItemStack(NCBlocks.blockBlock, 1, 0));
-		OreDictionary.registerOre("blockTin", new ItemStack(NCBlocks.blockBlock, 1, 1));
-		OreDictionary.registerOre("blockLead", new ItemStack(NCBlocks.blockBlock, 1, 2));
-		OreDictionary.registerOre("blockSilver", new ItemStack(NCBlocks.blockBlock, 1, 3));
-		OreDictionary.registerOre("blockBronze", new ItemStack(NCBlocks.blockBlock, 1, 6));
-		OreDictionary.registerOre("blockThorium", new ItemStack(NCBlocks.blockBlock, 1, 5));
-		OreDictionary.registerOre("blockTough", new ItemStack(NCBlocks.blockBlock, 1, 7));
-		OreDictionary.registerOre("blockLithium", new ItemStack(NCBlocks.blockBlock, 1, 8));
-		OreDictionary.registerOre("blockBoron", new ItemStack(NCBlocks.blockBlock, 1, 9));
-		OreDictionary.registerOre("blockMagnesium", new ItemStack(NCBlocks.blockBlock, 1, 10));
-		OreDictionary.registerOre("blockGraphite", new ItemStack(NCBlocks.graphiteBlock));
-		
-		// Parts Ore Dictionary
-		OreDictionary.registerOre("plateBasic", new ItemStack(NCItems.parts, 1, 0));
-		OreDictionary.registerOre("plateIron", new ItemStack(NCItems.parts, 1, 1));
-		OreDictionary.registerOre("plateReinforced", new ItemStack(NCItems.parts, 1, 3));
-		OreDictionary.registerOre("universalReactant", new ItemStack(NCItems.parts, 1, 4));
-		OreDictionary.registerOre("plateTin", new ItemStack(NCItems.parts, 1, 6));
-		OreDictionary.registerOre("plateDU", new ItemStack(NCItems.parts, 1, 8));
-		OreDictionary.registerOre("plateAdvanced", new ItemStack(NCItems.parts, 1, 9));
-		OreDictionary.registerOre("plateLead", new ItemStack(NCItems.parts, 1, 14));
-		
-		// Fission Fuel Materials Ore Dictionary
-		OreDictionary.registerOre("U238", new ItemStack(NCItems.material, 1, 24));
-		OreDictionary.registerOre("U238Base", new ItemStack(NCItems.material, 1, 24));
-		OreDictionary.registerOre("U238", new ItemStack(NCItems.material, 1, 55));
-		OreDictionary.registerOre("U238Oxide", new ItemStack(NCItems.material, 1, 55));
-		OreDictionary.registerOre("tinyU238", new ItemStack(NCItems.material, 1, 25));
-		OreDictionary.registerOre("tinyU238Base", new ItemStack(NCItems.material, 1, 25));
-		OreDictionary.registerOre("tinyU238", new ItemStack(NCItems.material, 1, 56));
-		OreDictionary.registerOre("tinyU238Oxide", new ItemStack(NCItems.material, 1, 56));
-		
-		OreDictionary.registerOre("U235", new ItemStack(NCItems.material, 1, 26));
-		OreDictionary.registerOre("U235Base", new ItemStack(NCItems.material, 1, 26));
-		OreDictionary.registerOre("U235", new ItemStack(NCItems.material, 1, 57));
-		OreDictionary.registerOre("U235Oxide", new ItemStack(NCItems.material, 1, 57));
-		OreDictionary.registerOre("tinyU235", new ItemStack(NCItems.material, 1, 27));
-		OreDictionary.registerOre("tinyU235Base", new ItemStack(NCItems.material, 1, 27));
-		OreDictionary.registerOre("tinyU235", new ItemStack(NCItems.material, 1, 58));
-		OreDictionary.registerOre("tinyU235Oxide", new ItemStack(NCItems.material, 1, 58));
-		
-		OreDictionary.registerOre("U233", new ItemStack(NCItems.material, 1, 28));
-		OreDictionary.registerOre("U233Base", new ItemStack(NCItems.material, 1, 28));
-		OreDictionary.registerOre("U233", new ItemStack(NCItems.material, 1, 59));
-		OreDictionary.registerOre("U233Oxide", new ItemStack(NCItems.material, 1, 59));
-		OreDictionary.registerOre("tinyU233", new ItemStack(NCItems.material, 1, 29));
-		OreDictionary.registerOre("tinyU233Base", new ItemStack(NCItems.material, 1, 29));
-		OreDictionary.registerOre("tinyU233", new ItemStack(NCItems.material, 1, 60));
-		OreDictionary.registerOre("tinyU233Oxide", new ItemStack(NCItems.material, 1, 60));
-		
-		OreDictionary.registerOre("Pu238", new ItemStack(NCItems.material, 1, 30));
-		OreDictionary.registerOre("Pu238Base", new ItemStack(NCItems.material, 1, 30));
-		OreDictionary.registerOre("Pu238", new ItemStack(NCItems.material, 1, 61));
-		OreDictionary.registerOre("Pu238Oxide", new ItemStack(NCItems.material, 1, 61));
-		OreDictionary.registerOre("tinyPu238", new ItemStack(NCItems.material, 1, 31));
-		OreDictionary.registerOre("tinyPu238Base", new ItemStack(NCItems.material, 1, 31));
-		OreDictionary.registerOre("tinyPu238", new ItemStack(NCItems.material, 1, 62));
-		OreDictionary.registerOre("tinyPu238Oxide", new ItemStack(NCItems.material, 1, 62));
-		
-		OreDictionary.registerOre("Pu239", new ItemStack(NCItems.material, 1, 32));
-		OreDictionary.registerOre("Pu239Base", new ItemStack(NCItems.material, 1, 32));
-		OreDictionary.registerOre("Pu239", new ItemStack(NCItems.material, 1, 63));
-		OreDictionary.registerOre("Pu239Oxide", new ItemStack(NCItems.material, 1, 63));
-		OreDictionary.registerOre("tinyPu239", new ItemStack(NCItems.material, 1, 33));
-		OreDictionary.registerOre("tinyPu239Base", new ItemStack(NCItems.material, 1, 33));
-		OreDictionary.registerOre("tinyPu239", new ItemStack(NCItems.material, 1, 64));
-		OreDictionary.registerOre("tinyPu239Oxide", new ItemStack(NCItems.material, 1, 64));
-		
-		OreDictionary.registerOre("Pu242", new ItemStack(NCItems.material, 1, 34));
-		OreDictionary.registerOre("Pu242Base", new ItemStack(NCItems.material, 1, 34));
-		OreDictionary.registerOre("Pu242", new ItemStack(NCItems.material, 1, 65));
-		OreDictionary.registerOre("Pu242Oxide", new ItemStack(NCItems.material, 1, 65));
-		OreDictionary.registerOre("tinyPu242", new ItemStack(NCItems.material, 1, 35));
-		OreDictionary.registerOre("tinyPu242Base", new ItemStack(NCItems.material, 1, 35));
-		OreDictionary.registerOre("tinyPu242", new ItemStack(NCItems.material, 1, 66));
-		OreDictionary.registerOre("tinyPu242Oxide", new ItemStack(NCItems.material, 1, 66));
-		
-		OreDictionary.registerOre("Pu241", new ItemStack(NCItems.material, 1, 36));
-		OreDictionary.registerOre("Pu241Base", new ItemStack(NCItems.material, 1, 36));
-		OreDictionary.registerOre("Pu241", new ItemStack(NCItems.material, 1, 67));
-		OreDictionary.registerOre("Pu241Oxide", new ItemStack(NCItems.material, 1, 67));
-		OreDictionary.registerOre("tinyPu241", new ItemStack(NCItems.material, 1, 37));
-		OreDictionary.registerOre("tinyPu241Base", new ItemStack(NCItems.material, 1, 37));
-		OreDictionary.registerOre("tinyPu241", new ItemStack(NCItems.material, 1, 68));
-		OreDictionary.registerOre("tinyPu241Oxide", new ItemStack(NCItems.material, 1, 68));
-		
-		OreDictionary.registerOre("Th232", new ItemStack(NCItems.material, 1, 38));
-		OreDictionary.registerOre("Th232Base", new ItemStack(NCItems.material, 1, 38));
-		OreDictionary.registerOre("Th232", new ItemStack(NCItems.material, 1, 82));
-		OreDictionary.registerOre("Th232Oxide", new ItemStack(NCItems.material, 1, 82));
-		OreDictionary.registerOre("tinyTh232", new ItemStack(NCItems.material, 1, 39));
-		OreDictionary.registerOre("tinyTh232Base", new ItemStack(NCItems.material, 1, 39));
-		OreDictionary.registerOre("tinyTh232", new ItemStack(NCItems.material, 1, 83));
-		OreDictionary.registerOre("tinyTh232Oxide", new ItemStack(NCItems.material, 1, 83));
-		
-		OreDictionary.registerOre("Th230", new ItemStack(NCItems.material, 1, 40));
-		OreDictionary.registerOre("Th230Base", new ItemStack(NCItems.material, 1, 40));
-		OreDictionary.registerOre("Th230", new ItemStack(NCItems.material, 1, 84));
-		OreDictionary.registerOre("Th230Oxide", new ItemStack(NCItems.material, 1, 84));
-		OreDictionary.registerOre("tinyTh230", new ItemStack(NCItems.material, 1, 41));
-		OreDictionary.registerOre("tinyTh230Base", new ItemStack(NCItems.material, 1, 41));
-		OreDictionary.registerOre("tinyTh230", new ItemStack(NCItems.material, 1, 85));
-		OreDictionary.registerOre("tinyTh230Oxide", new ItemStack(NCItems.material, 1, 85));
-		
-		OreDictionary.registerOre("Np236", new ItemStack(NCItems.material, 1, 86));
-		OreDictionary.registerOre("Np236Base", new ItemStack(NCItems.material, 1, 86));
-		OreDictionary.registerOre("Np236", new ItemStack(NCItems.material, 1, 104));
-		OreDictionary.registerOre("Np236Oxide", new ItemStack(NCItems.material, 1, 104));
-		OreDictionary.registerOre("tinyNp236", new ItemStack(NCItems.material, 1, 87));
-		OreDictionary.registerOre("tinyNp236Base", new ItemStack(NCItems.material, 1, 87));
-		OreDictionary.registerOre("tinyNp236", new ItemStack(NCItems.material, 1, 105));
-		OreDictionary.registerOre("tinyNp236Oxide", new ItemStack(NCItems.material, 1, 105));
-		
-		OreDictionary.registerOre("Np237", new ItemStack(NCItems.material, 1, 88));
-		OreDictionary.registerOre("Np237Base", new ItemStack(NCItems.material, 1, 88));
-		OreDictionary.registerOre("Np237", new ItemStack(NCItems.material, 1, 106));
-		OreDictionary.registerOre("Np237Oxide", new ItemStack(NCItems.material, 1, 106));
-		OreDictionary.registerOre("tinyNp237", new ItemStack(NCItems.material, 1, 89));
-		OreDictionary.registerOre("tinyNp237Base", new ItemStack(NCItems.material, 1, 89));
-		OreDictionary.registerOre("tinyNp237", new ItemStack(NCItems.material, 1, 107));
-		OreDictionary.registerOre("tinyNp237Oxide", new ItemStack(NCItems.material, 1, 107));
-		
-		OreDictionary.registerOre("Am241", new ItemStack(NCItems.material, 1, 90));
-		OreDictionary.registerOre("Am241Base", new ItemStack(NCItems.material, 1, 90));
-		OreDictionary.registerOre("Am241", new ItemStack(NCItems.material, 1, 108));
-		OreDictionary.registerOre("Am241Oxide", new ItemStack(NCItems.material, 1, 108));
-		OreDictionary.registerOre("tinyAm241", new ItemStack(NCItems.material, 1, 91));
-		OreDictionary.registerOre("tinyAm241Base", new ItemStack(NCItems.material, 1, 91));
-		OreDictionary.registerOre("tinyAm241", new ItemStack(NCItems.material, 1, 109));
-		OreDictionary.registerOre("tinyAm241Oxide", new ItemStack(NCItems.material, 1, 109));
-		
-		OreDictionary.registerOre("Am242", new ItemStack(NCItems.material, 1, 92));
-		OreDictionary.registerOre("Am242Base", new ItemStack(NCItems.material, 1, 92));
-		OreDictionary.registerOre("Am242", new ItemStack(NCItems.material, 1, 110));
-		OreDictionary.registerOre("Am242Oxide", new ItemStack(NCItems.material, 1, 110));
-		OreDictionary.registerOre("tinyAm242", new ItemStack(NCItems.material, 1, 93));
-		OreDictionary.registerOre("tinyAm242Base", new ItemStack(NCItems.material, 1, 93));
-		OreDictionary.registerOre("tinyAm242", new ItemStack(NCItems.material, 1, 111));
-		OreDictionary.registerOre("tinyAm242Oxide", new ItemStack(NCItems.material, 1, 111));
-		
-		OreDictionary.registerOre("Am243", new ItemStack(NCItems.material, 1, 94));
-		OreDictionary.registerOre("Am243Base", new ItemStack(NCItems.material, 1, 94));
-		OreDictionary.registerOre("Am243", new ItemStack(NCItems.material, 1, 112));
-		OreDictionary.registerOre("Am243Oxide", new ItemStack(NCItems.material, 1, 112));
-		OreDictionary.registerOre("tinyAm243", new ItemStack(NCItems.material, 1, 95));
-		OreDictionary.registerOre("tinyAm243Base", new ItemStack(NCItems.material, 1, 95));
-		OreDictionary.registerOre("tinyAm243", new ItemStack(NCItems.material, 1, 113));
-		OreDictionary.registerOre("tinyAm243Oxide", new ItemStack(NCItems.material, 1, 113));
-		
-		OreDictionary.registerOre("Cm243", new ItemStack(NCItems.material, 1, 96));
-		OreDictionary.registerOre("Cm243Base", new ItemStack(NCItems.material, 1, 96));
-		OreDictionary.registerOre("Cm243", new ItemStack(NCItems.material, 1, 114));
-		OreDictionary.registerOre("Cm243Oxide", new ItemStack(NCItems.material, 1, 114));
-		OreDictionary.registerOre("tinyCm243", new ItemStack(NCItems.material, 1, 97));
-		OreDictionary.registerOre("tinyCm243Base", new ItemStack(NCItems.material, 1, 97));
-		OreDictionary.registerOre("tinyCm243", new ItemStack(NCItems.material, 1, 115));
-		OreDictionary.registerOre("tinyCm243Oxide", new ItemStack(NCItems.material, 1, 115));
-		
-		OreDictionary.registerOre("Cm245", new ItemStack(NCItems.material, 1, 98));
-		OreDictionary.registerOre("Cm245Base", new ItemStack(NCItems.material, 1, 98));
-		OreDictionary.registerOre("Cm245", new ItemStack(NCItems.material, 1, 116));
-		OreDictionary.registerOre("Cm245Oxide", new ItemStack(NCItems.material, 1, 116));
-		OreDictionary.registerOre("tinyCm245", new ItemStack(NCItems.material, 1, 99));
-		OreDictionary.registerOre("tinyCm245Base", new ItemStack(NCItems.material, 1, 99));
-		OreDictionary.registerOre("tinyCm245", new ItemStack(NCItems.material, 1, 117));
-		OreDictionary.registerOre("tinyCm245Oxide", new ItemStack(NCItems.material, 1, 117));
-		
-		OreDictionary.registerOre("Cm246", new ItemStack(NCItems.material, 1, 100));
-		OreDictionary.registerOre("Cm246Base", new ItemStack(NCItems.material, 1, 100));
-		OreDictionary.registerOre("Cm246", new ItemStack(NCItems.material, 1, 118));
-		OreDictionary.registerOre("Cm246Oxide", new ItemStack(NCItems.material, 1, 118));
-		OreDictionary.registerOre("tinyCm246", new ItemStack(NCItems.material, 1, 101));
-		OreDictionary.registerOre("tinyCm246Base", new ItemStack(NCItems.material, 1, 101));
-		OreDictionary.registerOre("tinyCm246", new ItemStack(NCItems.material, 1, 119));
-		OreDictionary.registerOre("tinyCm246Oxide", new ItemStack(NCItems.material, 1, 119));
-		
-		OreDictionary.registerOre("Cm247", new ItemStack(NCItems.material, 1, 102));
-		OreDictionary.registerOre("Cm247Base", new ItemStack(NCItems.material, 1, 102));
-		OreDictionary.registerOre("Cm247", new ItemStack(NCItems.material, 1, 120));
-		OreDictionary.registerOre("Cm247Oxide", new ItemStack(NCItems.material, 1, 120));
-		OreDictionary.registerOre("tinyCm247", new ItemStack(NCItems.material, 1, 103));
-		OreDictionary.registerOre("tinyCm247Base", new ItemStack(NCItems.material, 1, 103));
-		OreDictionary.registerOre("tinyCm247", new ItemStack(NCItems.material, 1, 121));
-		OreDictionary.registerOre("tinyCm247Oxide", new ItemStack(NCItems.material, 1, 121));
-		
-		OreDictionary.registerOre("Cf250", new ItemStack(NCItems.material, 1, 122));
-		OreDictionary.registerOre("Cf250Base", new ItemStack(NCItems.material, 1, 122));
-		OreDictionary.registerOre("Cf250", new ItemStack(NCItems.material, 1, 124));
-		OreDictionary.registerOre("Cf250Oxide", new ItemStack(NCItems.material, 1, 124));
-		OreDictionary.registerOre("tinyCf250", new ItemStack(NCItems.material, 1, 123));
-		OreDictionary.registerOre("tinyCf250Base", new ItemStack(NCItems.material, 1, 123));
-		OreDictionary.registerOre("tinyCf250", new ItemStack(NCItems.material, 1, 125));
-		OreDictionary.registerOre("tinyCf250Oxide", new ItemStack(NCItems.material, 1, 125));
-		
-		// Lithium and Boron Isotopes
-		OreDictionary.registerOre("Li6", new ItemStack(NCItems.material, 1, 46));
-		OreDictionary.registerOre("tinyLi6", new ItemStack(NCItems.material, 1, 69));
-		OreDictionary.registerOre("Li7", new ItemStack(NCItems.material, 1, 47));
-		OreDictionary.registerOre("B10", new ItemStack(NCItems.material, 1, 48));
-		OreDictionary.registerOre("tinyB10", new ItemStack(NCItems.material, 1, 70));
-		OreDictionary.registerOre("B11", new ItemStack(NCItems.material, 1, 49));
-		
-		// Fission Fuels Ore Dictionary
-		OreDictionary.registerOre("LEU235", new ItemStack(NCItems.fuel, 1, 0));
-		OreDictionary.registerOre("LEU235Oxide", new ItemStack(NCItems.fuel, 1, 51));
-		OreDictionary.registerOre("LEU235Cell", new ItemStack(NCItems.fuel, 1, 11));
-		OreDictionary.registerOre("LEU235CellOxide", new ItemStack(NCItems.fuel, 1, 59));
-		OreDictionary.registerOre("dLEU235Cell", new ItemStack(NCItems.fuel, 1, 22));
-		OreDictionary.registerOre("dLEU235CellOxide", new ItemStack(NCItems.fuel, 1, 67));
-		
-		OreDictionary.registerOre("HEU235", new ItemStack(NCItems.fuel, 1, 1));
-		OreDictionary.registerOre("HEU235Oxide", new ItemStack(NCItems.fuel, 1, 52));
-		OreDictionary.registerOre("HEU235Cell", new ItemStack(NCItems.fuel, 1, 12));
-		OreDictionary.registerOre("HEU235CellOxide", new ItemStack(NCItems.fuel, 1, 60));
-		OreDictionary.registerOre("dHEU235Cell", new ItemStack(NCItems.fuel, 1, 23));
-		OreDictionary.registerOre("dHEU235CellOxide", new ItemStack(NCItems.fuel, 1, 68));
-		
-		OreDictionary.registerOre("LEP239", new ItemStack(NCItems.fuel, 1, 2));
-		OreDictionary.registerOre("LEP239Oxide", new ItemStack(NCItems.fuel, 1, 53));
-		OreDictionary.registerOre("LEP239Cell", new ItemStack(NCItems.fuel, 1, 13));
-		OreDictionary.registerOre("LEP239CellOxide", new ItemStack(NCItems.fuel, 1, 61));
-		OreDictionary.registerOre("dLEP239Cell", new ItemStack(NCItems.fuel, 1, 24));
-		OreDictionary.registerOre("dLEP239CellOxide", new ItemStack(NCItems.fuel, 1, 69));
-		
-		OreDictionary.registerOre("HEP239", new ItemStack(NCItems.fuel, 1, 3));
-		OreDictionary.registerOre("HEP239Oxide", new ItemStack(NCItems.fuel, 1, 54));
-		OreDictionary.registerOre("HEP239Cell", new ItemStack(NCItems.fuel, 1, 14));
-		OreDictionary.registerOre("HEP239CellOxide", new ItemStack(NCItems.fuel, 1, 62));
-		OreDictionary.registerOre("dHEP239Cell", new ItemStack(NCItems.fuel, 1, 25));
-		OreDictionary.registerOre("dHEP239CellOxide", new ItemStack(NCItems.fuel, 1, 70));
-		
-		OreDictionary.registerOre("MOX239", new ItemStack(NCItems.fuel, 1, 4));
-		OreDictionary.registerOre("MOX239Cell", new ItemStack(NCItems.fuel, 1, 15));
-		OreDictionary.registerOre("dMOX239Cell", new ItemStack(NCItems.fuel, 1, 26));
-		
-		OreDictionary.registerOre("TBU", new ItemStack(NCItems.fuel, 1, 5));
-		OreDictionary.registerOre("TBUOxide", new ItemStack(NCItems.fuel, 1, 76));
-		OreDictionary.registerOre("TBUCell", new ItemStack(NCItems.fuel, 1, 16));
-		OreDictionary.registerOre("TBUCellOxide", new ItemStack(NCItems.fuel, 1, 77));
-		OreDictionary.registerOre("dTBUCell", new ItemStack(NCItems.fuel, 1, 27));
-		OreDictionary.registerOre("dTBUCellOxide", new ItemStack(NCItems.fuel, 1, 78));
-		
-		OreDictionary.registerOre("LEU233", new ItemStack(NCItems.fuel, 1, 6));
-		OreDictionary.registerOre("LEU233Oxide", new ItemStack(NCItems.fuel, 1, 55));
-		OreDictionary.registerOre("LEU233Cell", new ItemStack(NCItems.fuel, 1, 17));
-		OreDictionary.registerOre("LEU233CellOxide", new ItemStack(NCItems.fuel, 1, 63));
-		OreDictionary.registerOre("dLEU233Cell", new ItemStack(NCItems.fuel, 1, 28));
-		OreDictionary.registerOre("dLEU233CellOxide", new ItemStack(NCItems.fuel, 1, 71));
-		
-		OreDictionary.registerOre("HEU233", new ItemStack(NCItems.fuel, 1, 7));
-		OreDictionary.registerOre("HEU233Oxide", new ItemStack(NCItems.fuel, 1, 56));
-		OreDictionary.registerOre("HEU233Cell", new ItemStack(NCItems.fuel, 1, 18));
-		OreDictionary.registerOre("HEU233CellOxide", new ItemStack(NCItems.fuel, 1, 64));
-		OreDictionary.registerOre("dHEU233Cell", new ItemStack(NCItems.fuel, 1, 29));
-		OreDictionary.registerOre("dHEU233CellOxide", new ItemStack(NCItems.fuel, 1, 72));
-		
-		OreDictionary.registerOre("LEP241", new ItemStack(NCItems.fuel, 1, 8));
-		OreDictionary.registerOre("LEP241Oxide", new ItemStack(NCItems.fuel, 1, 57));
-		OreDictionary.registerOre("LEP241Cell", new ItemStack(NCItems.fuel, 1, 19));
-		OreDictionary.registerOre("LEP241CellOxide", new ItemStack(NCItems.fuel, 1, 65));
-		OreDictionary.registerOre("dLEP241Cell", new ItemStack(NCItems.fuel, 1, 30));
-		OreDictionary.registerOre("dLEP241CellOxide", new ItemStack(NCItems.fuel, 1, 73));
-		
-		OreDictionary.registerOre("HEP241", new ItemStack(NCItems.fuel, 1, 9));
-		OreDictionary.registerOre("HEP241Oxide", new ItemStack(NCItems.fuel, 1, 58));
-		OreDictionary.registerOre("HEP241Cell", new ItemStack(NCItems.fuel, 1, 20));
-		OreDictionary.registerOre("HEP241CellOxide", new ItemStack(NCItems.fuel, 1, 66));
-		OreDictionary.registerOre("dHEP241Cell", new ItemStack(NCItems.fuel, 1, 31));
-		OreDictionary.registerOre("dHEP241CellOxide", new ItemStack(NCItems.fuel, 1, 74));
-		
-		OreDictionary.registerOre("MOX241", new ItemStack(NCItems.fuel, 1, 10));
-		OreDictionary.registerOre("MOX241Cell", new ItemStack(NCItems.fuel, 1, 21));
-		OreDictionary.registerOre("dMOX241Cell", new ItemStack(NCItems.fuel, 1, 32));
-		
-		OreDictionary.registerOre("LEN236", new ItemStack(NCItems.fuel, 1, 79));
-		OreDictionary.registerOre("LEN236Oxide", new ItemStack(NCItems.fuel, 1, 89));
-		OreDictionary.registerOre("LEN236Cell", new ItemStack(NCItems.fuel, 1, 99));
-		OreDictionary.registerOre("LEN236CellOxide", new ItemStack(NCItems.fuel, 1, 109));
-		OreDictionary.registerOre("dLEN236Cell", new ItemStack(NCItems.fuel, 1, 119));
-		OreDictionary.registerOre("dLEN236CellOxide", new ItemStack(NCItems.fuel, 1, 129));
-		
-		OreDictionary.registerOre("HEN236", new ItemStack(NCItems.fuel, 1, 80));
-		OreDictionary.registerOre("HEN236Oxide", new ItemStack(NCItems.fuel, 1, 90));
-		OreDictionary.registerOre("HEN236Cell", new ItemStack(NCItems.fuel, 1, 100));
-		OreDictionary.registerOre("HEN236CellOxide", new ItemStack(NCItems.fuel, 1, 110));
-		OreDictionary.registerOre("dHEN236Cell", new ItemStack(NCItems.fuel, 1, 120));
-		OreDictionary.registerOre("dHEN236CellOxide", new ItemStack(NCItems.fuel, 1, 130));
-		
-		OreDictionary.registerOre("LEA242", new ItemStack(NCItems.fuel, 1, 81));
-		OreDictionary.registerOre("LEA242Oxide", new ItemStack(NCItems.fuel, 1, 91));
-		OreDictionary.registerOre("LEA242Cell", new ItemStack(NCItems.fuel, 1, 101));
-		OreDictionary.registerOre("LEA242CellOxide", new ItemStack(NCItems.fuel, 1, 111));
-		OreDictionary.registerOre("dLEA242Cell", new ItemStack(NCItems.fuel, 1, 121));
-		OreDictionary.registerOre("dLEA242CellOxide", new ItemStack(NCItems.fuel, 1, 131));
-		
-		OreDictionary.registerOre("HEA242", new ItemStack(NCItems.fuel, 1, 82));
-		OreDictionary.registerOre("HEA242Oxide", new ItemStack(NCItems.fuel, 1, 92));
-		OreDictionary.registerOre("HEA242Cell", new ItemStack(NCItems.fuel, 1, 102));
-		OreDictionary.registerOre("HEA242CellOxide", new ItemStack(NCItems.fuel, 1, 112));
-		OreDictionary.registerOre("dHEA242Cell", new ItemStack(NCItems.fuel, 1, 122));
-		OreDictionary.registerOre("dHEA242CellOxide", new ItemStack(NCItems.fuel, 1, 132));
-		
-		OreDictionary.registerOre("LEC243", new ItemStack(NCItems.fuel, 1, 83));
-		OreDictionary.registerOre("LEC243Oxide", new ItemStack(NCItems.fuel, 1, 93));
-		OreDictionary.registerOre("LEC243Cell", new ItemStack(NCItems.fuel, 1, 103));
-		OreDictionary.registerOre("LEC243CellOxide", new ItemStack(NCItems.fuel, 1, 113));
-		OreDictionary.registerOre("dLEC243Cell", new ItemStack(NCItems.fuel, 1, 123));
-		OreDictionary.registerOre("dLEC243CellOxide", new ItemStack(NCItems.fuel, 1, 133));
-		
-		OreDictionary.registerOre("HEC243", new ItemStack(NCItems.fuel, 1, 84));
-		OreDictionary.registerOre("HEC243Oxide", new ItemStack(NCItems.fuel, 1, 94));
-		OreDictionary.registerOre("HEC243Cell", new ItemStack(NCItems.fuel, 1, 104));
-		OreDictionary.registerOre("HEC243CellOxide", new ItemStack(NCItems.fuel, 1, 114));
-		OreDictionary.registerOre("dHEC243Cell", new ItemStack(NCItems.fuel, 1, 124));
-		OreDictionary.registerOre("dHEC243CellOxide", new ItemStack(NCItems.fuel, 1, 134));
-		
-		OreDictionary.registerOre("LEC245", new ItemStack(NCItems.fuel, 1, 85));
-		OreDictionary.registerOre("LEC245Oxide", new ItemStack(NCItems.fuel, 1, 95));
-		OreDictionary.registerOre("LEC245Cell", new ItemStack(NCItems.fuel, 1, 105));
-		OreDictionary.registerOre("LEC245CellOxide", new ItemStack(NCItems.fuel, 1, 115));
-		OreDictionary.registerOre("dLEC245Cell", new ItemStack(NCItems.fuel, 1, 125));
-		OreDictionary.registerOre("dLEC245CellOxide", new ItemStack(NCItems.fuel, 1, 135));
-		
-		OreDictionary.registerOre("HEC245", new ItemStack(NCItems.fuel, 1, 86));
-		OreDictionary.registerOre("HEC245Oxide", new ItemStack(NCItems.fuel, 1, 96));
-		OreDictionary.registerOre("HEC245Cell", new ItemStack(NCItems.fuel, 1, 106));
-		OreDictionary.registerOre("HEC245CellOxide", new ItemStack(NCItems.fuel, 1, 116));
-		OreDictionary.registerOre("dHEC245Cell", new ItemStack(NCItems.fuel, 1, 126));
-		OreDictionary.registerOre("dHEC245CellOxide", new ItemStack(NCItems.fuel, 1, 136));
-		
-		OreDictionary.registerOre("LEC247", new ItemStack(NCItems.fuel, 1, 87));
-		OreDictionary.registerOre("LEC247Oxide", new ItemStack(NCItems.fuel, 1, 97));
-		OreDictionary.registerOre("LEC247Cell", new ItemStack(NCItems.fuel, 1, 107));
-		OreDictionary.registerOre("LEC247CellOxide", new ItemStack(NCItems.fuel, 1, 117));
-		OreDictionary.registerOre("dLEC247Cell", new ItemStack(NCItems.fuel, 1, 127));
-		OreDictionary.registerOre("dLEC247CellOxide", new ItemStack(NCItems.fuel, 1, 137));
-		
-		OreDictionary.registerOre("HEC247", new ItemStack(NCItems.fuel, 1, 88));
-		OreDictionary.registerOre("HEC247Oxide", new ItemStack(NCItems.fuel, 1, 98));
-		OreDictionary.registerOre("HEC247Cell", new ItemStack(NCItems.fuel, 1, 108));
-		OreDictionary.registerOre("HEC247CellOxide", new ItemStack(NCItems.fuel, 1, 118));
-		OreDictionary.registerOre("dHEC247Cell", new ItemStack(NCItems.fuel, 1, 128));
-		OreDictionary.registerOre("dHEC247CellOxide", new ItemStack(NCItems.fuel, 1, 138));
-		
-		// Vanilla Ore Dictionary
-		OreDictionary.registerOre("gemCoal", new ItemStack(Items.coal, 1));
-		OreDictionary.registerOre("oreObsidian", new ItemStack(Blocks.obsidian, 1));
-		
-		// Filled Fluid Cell Dictionary
-		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 34));
-		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 35));
-		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 36));
-		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 37));
-		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 38));
-		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 39));
-		OreDictionary.registerOre("filledNCGasCell", new ItemStack(NCItems.fuel, 1, 40));
-		
-		// Record Ore Dictionary
-		OreDictionary.registerOre("record", new ItemStack(NCItems.recordPractice, 1));
-		OreDictionary.registerOre("record", new ItemStack(NCItems.recordArea51, 1));
-		OreDictionary.registerOre("record", new ItemStack(NCItems.recordNeighborhood, 1));
-		
 		// Seeds
 		MinecraftForge.addGrassSeed(extraDrops ? new ItemStack(Items.pumpkin_seeds) : new ItemStack(Items.wheat_seeds), 1);
 			
@@ -2326,17 +2280,19 @@ public class NuclearCraft {
 		FMLCommonHandler.instance().bus().register(achievements);
 		
 		nuclearFurnaceAchievement = a("nuclearFurnace", 4, -2, NCBlocks.nuclearFurnaceIdle, null);
-		if (workspace) heavyDutyWorkspaceAchievement = a("heavyDutyWorkspace", 0, 0, NCBlocks.nuclearWorkspace, null);
-		nukeAchievement = a("nuke", -2, -2, NCBlocks.nukeE, workspace ? heavyDutyWorkspaceAchievement : null);
-		reactionGeneratorAchievement = a("reactionGenerator", -2, 0, NCBlocks.reactionGeneratorIdle, workspace ? heavyDutyWorkspaceAchievement : null);
+		heavyDutyWorkspaceAchievement = a("heavyDutyWorkspace", 0, 0, NCBlocks.nuclearWorkspace, null);
+		nukeAchievement = a("nuke", -2, -2, NCBlocks.nukeE, heavyDutyWorkspaceAchievement);
+		reactionGeneratorAchievement = a("reactionGenerator", -2, 0, NCBlocks.reactionGeneratorIdle, heavyDutyWorkspaceAchievement);
 		fissionControllerAchievement = a("fissionController", 2, 2, NCBlocks.fissionReactorGraphiteIdle, null);
 		RTGAchievement = a("RTG", 2, 0, NCBlocks.RTG, fissionControllerAchievement);
 		fusionReactorAchievement = a("fusionReactor", 4, 2, NCBlocks.fusionReactor, fissionControllerAchievement);
 		separatorAchievement = a("separator", -2, 2, NCBlocks.separatorIdle, null);
 		synchrotronAchievement = a("synchrotron", 4, 6, NCBlocks.synchrotronIdle, null);
 		synchrotronAchievement = a("antimatterBomb", 4, 8, NCBlocks.antimatterBombE, synchrotronAchievement);
+
+		NuclearcraftRenderer.init();
 	}
-	
+
 	public Achievement a(String name, int x, int y, Block req, Achievement pre) {
 		return achievements.registerAchievement(new Achievement("achievement." + name, name, x, y, req, pre));
 	}
@@ -2348,13 +2304,15 @@ public class NuclearCraft {
 	public Achievement a(String name, int x, int y, ItemStack req, Achievement pre) {
 		return achievements.registerAchievement(new Achievement("achievement." + name, name, x, y, req, pre));
 	}
-	
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		// Mod Recipes
+
+		//IC2 Integration
 		IC2Hook = new IC2Recipes();
 		IC2Hook.hook();
-		
+
+		//Thermal Expansion Integration
 		TEHook = new TERecipes();
 		TEHook.hook();
 	}

@@ -30,15 +30,8 @@ public final class TERecipes {
 		try {ThermalExpansionHelper.addSmelterRecipe(2400, new ItemStack(NCItems.material, 1, 50), new ItemStack(NCItems.material, 2, 43), new ItemStack(NCItems.material, 3, 71));} catch(Exception e) {}
 		try {ThermalExpansionHelper.addSmelterRecipe(4000, new ItemStack(Items.redstone, 1), new ItemStack(Items.dye, 1, 4), new ItemStack(NCItems.parts, 3, 4));} catch(Exception e) {}
 		try {ThermalExpansionHelper.addSmelterRecipe(2000, new ItemStack(Items.redstone, 1), new ItemStack(NCItems.material, 1, 10), new ItemStack(NCItems.parts, 3, 4));} catch(Exception e) {}
-		try {ThermalExpansionHelper.addSmelterRecipe(1200, new ItemStack(NCItems.parts, 1, 1), new ItemStack(NCItems.material, 4, 10), new ItemStack(NCItems.upgradeSpeed, 1));} catch(Exception e) {}
-		try {ThermalExpansionHelper.addSmelterRecipe(1200, new ItemStack(NCItems.parts, 1, 1), new ItemStack(NCItems.parts, 4, 4), new ItemStack(NCItems.upgradeEnergy, 1));} catch(Exception e) {}
 		try {ThermalExpansionHelper.addSmelterRecipe(1600, new ItemStack(NCItems.material, 1, 2), new ItemStack(NCItems.material, 1, 14), new ItemStack(NCItems.parts, 1, 0));} catch(Exception e) {}
-		try {ThermalExpansionHelper.addSmelterRecipe(2000, new ItemStack(NCItems.parts, 1, 0), new ItemStack(NCItems.material, NuclearCraft.workspace ? 2 : 4, 7), new ItemStack(NCItems.parts, 1, 3));} catch(Exception e) {}
-		try {ThermalExpansionHelper.addSmelterRecipe(2400, new ItemStack(NCItems.parts, 1, 0), new ItemStack(NCItems.material, NuclearCraft.workspace ? 2 : 4, 22), new ItemStack(NCItems.parts, 1, 3));} catch(Exception e) {}
-		try {ThermalExpansionHelper.addSmelterRecipe(2000, new ItemStack(NCItems.parts, NuclearCraft.workspace ? 2 : 3, 3), new ItemStack(NCItems.material, 4, 24), new ItemStack(NCItems.parts, 1, 8));} catch(Exception e) {}
-		try {ThermalExpansionHelper.addSmelterRecipe(2000, new ItemStack(NCItems.parts, NuclearCraft.workspace ? 2 : 3, 3), new ItemStack(NCItems.material, 4, 55), new ItemStack(NCItems.parts, 1, 8));} catch(Exception e) {}
-		try {ThermalExpansionHelper.addSmelterRecipe(2400, new ItemStack(NCItems.parts, 2, 8), new ItemStack(NCItems.material, NuclearCraft.workspace ? 3 : 6, 48), new ItemStack(NCItems.parts, 1, 9));} catch(Exception e) {}
-		
+
 		//Pulveriser
 		try {ThermalExpansionHelper.addPulverizerRecipe(4000, new ItemStack(NCItems.material, 1, 73), new ItemStack(NCItems.material, 1, 74));} catch(Exception e) {}
 		
