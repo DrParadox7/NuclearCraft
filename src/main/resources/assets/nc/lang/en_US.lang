@@ -633,13 +633,16 @@ item.Neighborhood.desc=Retroville Neighbourhood
 
 item.blank.name=Blank
 
-item.antimatter.name=Antimatter (Temporary)
+item.antimatter.name=Antimatter
 
 item.lithiumIonBattery.name=Lithium Ion Battery
 
 item.geiger.name=Geiger Counter
 item.radaway.name=RadAway
 item.radX.name=Rad-X
+
+gas.uranium238=Uranium-238 Oxide
+gas.boron10=Boron-10 Oxide
 
 achievement.nuclearFurnace=Speed Smelting
 achievement.nuclearFurnace.desc=Make a Nuclear Furnace

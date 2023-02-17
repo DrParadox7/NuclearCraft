@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import nc.NuclearCraft;
 import nc.block.NCBlocks;
 import nc.item.NCItems;
@@ -16,13 +17,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class NuclearWorkspaceCraftingManager {
     /** The static instance of this class */
     public static final NuclearWorkspaceCraftingManager instance = new NuclearWorkspaceCraftingManager();
     /** A list of all the recipes added */
     @SuppressWarnings("rawtypes")
-	public List recipes = new ArrayList();
+	public List recipes;
 
     /**
      * Returns the static instance of this class
@@ -34,66 +36,93 @@ public class NuclearWorkspaceCraftingManager {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
 	public NuclearWorkspaceCraftingManager() {
-    	recipes = new ArrayList();
-    	
-    	if (NuclearCraft.workspace) {
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.reactorBlock, 16), true, new Object[] {"INNNI", "N   N", "N   N", "N   N", "INNNI", 'N', "plateBasic", 'I', "ingotTough"}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.cellBlock, 1), true, new Object[] {"LNTNL", "NP PN", "T   T", "NP PN", "LNTNL", 'N', "plateBasic", 'P', "plateLead", 'L', "blockGlass", 'T', "ingotTough"}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.emptyCoolerBlock, 16), true, new Object[] {" NNN ", "NUUUN", "NUUUN", "NUUUN", " NNN ", 'N', "plateBasic", 'U', new ItemStack(NCItems.parts, 1, 10)}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.speedBlock, 6), true, new Object[] {" NNN ", "NURUN", "NRURN", "NURUN", " NNN ", 'N', "plateBasic", 'R', Items.blaze_powder, 'U', Items.redstone}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fissionReactorGraphiteIdle, 1), true, new Object[] {"TNNNT", "NUUUN", "NUMUN", "NUUUN", "TNNNT", 'N', "plateReinforced", 'U', "plateBasic", 'T', "ingotTough", 'M', NCBlocks.machineBlock}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fissionReactorSteamIdle, 1), true, new Object[] {"FUTUF", "UHWHU", "TWMWT", "UHWHU", "FUTUF", 'U', "plateAdvanced", 'T', "ingotTough", 'M', NCBlocks.fissionReactorGraphiteIdle, 'X', "plateDU", 'F', "ultimateCircuit", 'W', NCBlocks.waterCoolerBlock, 'H', "infiniteWater",}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.blastBlock, 16), true, new Object[] {" NNN ", "NUUUN", "NUUUN", "NUUUN", " NNN ", 'N', NCBlocks.reactorBlock, 'U', "oreObsidian"}));
-	    	
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCItems.parts, 4, 9), true, new Object[] {"RTTTR", "TNNNT", "TNDNT", "TNNNT", "RTTTR", 'N', "plateDU", 'T', new ItemStack (NCItems.material, 1, 48), 'R', "universalReactant", 'D', "dustDiamond"}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCItems.parts, 4, 5), true, new Object[] {"RTTTR", "T   T", "T   T", "RTTTR", 'T', "plateBasic", 'R', "universalReactant"}));
+        ItemStack circuitBasic = GameRegistry.findItemStack("Mekanism", "ControlCircuit", 1);
 
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCItems.upgradeSpeed, 1), true, new Object[] {"TTT", "TNT", "TTT", 'N', "plateIron", 'T', "dustLapis"}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCItems.upgradeEnergy, 1), true, new Object[] {"TTT", "TNT", "TTT", 'N', "plateIron", 'T', "universalReactant"}));
-	    	
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.tubing1, 8), true, new Object[] {" NNN ", "NIIIN", " NNN ", 'N', "plateLead", 'I', "plateIron"}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.tubing2, 8), true, new Object[] {" N ", "NIN", "NIN", "NIN", " N ", 'N', "plateLead", 'I', "plateIron"}));
-	
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.hastenerIdle, 1), true, new Object[] {"TNNNT", "NUUUN", "NUMUN", "NUUUN", "TNNNT", 'N', "plateLead", 'T', "ingotTough", 'U', "universalReactant", 'M', NCBlocks.machineBlock}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.collectorIdle, 1), true, new Object[] {" NNN ", "NUUUN", "NUUUN", "NUUUN", " NNN ", 'N', "plateBasic", 'U', new ItemStack(NCItems.material, 1, 40)}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.ioniserIdle, 1), true, new Object[] {"TNNNT", "NUUUN", "NUMUN", "NUUUN", "TNNNT", 'N', "plateLead", 'T', "plateDU", 'U', Items.redstone, 'M', NCBlocks.machineBlock}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.coolerIdle, 1), true, new Object[] {"TNNNT", "NUUUN", "NUMUN", "NUUUN", "TNNNT", 'N', "plateBasic", 'T', "plateDU", 'U', "universalReactant", 'M', NCBlocks.machineBlock}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.heliumExtractorIdle, 1), true, new Object[] {"TNNNT", "NUUUN", "NUMUN", "NUUUN", "TNNNT", 'T', new ItemStack(NCItems.parts, 1, 5), 'N', "plateReinforced", 'U', "plateTin", 'M', NCBlocks.machineBlock}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.recyclerIdle, 1), true, new Object[] {"TNNNT", "NUUUN", "NUMUN", "NUUUN", "TNNNT", 'N', "plateLead", 'T', "ingotHardCarbon", 'U', "ingotTough", 'M', NCBlocks.machineBlock}));
-	    	
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionConnector, 1), true, new Object[] {"RRCRR", "BBBBB", "EEEEE", "BBBBB", "RRCRR", 'R', NCBlocks.reactorBlock, 'C', "advanceCircuit", 'B', "itemRubber", 'E', "ingotElectrum"}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionReactor, 1), true, new Object[] {"NDYDN", "DTCTD", "YCUCY", "DTCTD", "NDYDN", 'N', "plateAdvanced", 'D', "plateDU", 'T', "LaserAmp", 'Y', "Superconductor", 'U', NCBlocks.electromagnetIdle, 'C', new ItemStack(NCItems.parts, 1, 18)}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionReactorSteam, 1), true, new Object[] {"FUTUF", "UHWHU", "TWMWT", "UHWHU", "FUTUF", 'N', new ItemStack(NCItems.parts, 1, 7), 'U', "plateAdvanced", 'T', "ingotTough", 'M', NCBlocks.fusionReactor, 'X', "plateDU", 'F', "ultimateCircuit", 'W', NCBlocks.waterCoolerBlock, 'H', "infiniteWater",}));
-	    	
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.superElectromagnetIdle, 2), true, new Object[] {"ASSSA", "NNNNN", "MMMMM", "NNNNN", "ASSSA", 'A', new ItemStack (NCItems.parts, 1, 9), 'N', new ItemStack(NCItems.parts, 1, 17), 'S', new ItemStack (NCItems.parts, 1, 3), 'M', "ingotTough"}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.supercoolerIdle, 2), true, new Object[] {"ASSSA", "UUUUU", "MMMMM", "UUUUU", "ASSSA", 'A', new ItemStack (NCItems.parts, 1, 9), 'T', new ItemStack (NCItems.parts, 1, 3), 'M', new ItemStack(NCItems.parts, 1, 13), 'U', "dustCryotheum", 'S', new ItemStack (NCItems.parts, 1, 3)}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.synchrotronIdle, 1), true, new Object[] {"TNNNT", "NUGUN", "NGMGN", "NUGUN", "TNNNT", 'N', "plateAdvanced", 'U', "plateDU", 'T', NCBlocks.superElectromagnetIdle, 'M', "steelCasing", 'G', "ultimateCircuit"}));
-	    	
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.blockBlock, 1, 7), true, new Object[] {"TTTTT", "TTTTT", "TTTTT", "TTTTT", "TTTTT", 'T', "ingotTough"}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCItems.material, 25, 7), true, new Object[] {"T", 'T', "blockTough"}));
-	    	
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.RTG, 1), true, new Object[] {"GCCCG", "CTTTC", "CTXTC", "CTTTC", "GCCCG", 'G', "alloyElite", 'C', "plateLead", 'T', new ItemStack(NCItems.parts, 1, 8), 'X', new ItemStack(NCItems.fuel, 1, 46)}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.AmRTG, 1), true, new Object[] {"GCCCG", "CTTTC", "CTXTC", "CTTTC", "GCCCG", 'G', "alloyAdvanced", 'C', "plateLead", 'T', new ItemStack(NCItems.parts, 1, 3), 'X', new ItemStack(NCItems.fuel, 1, 139)}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.CfRTG, 1), true, new Object[] {"GCCCG", "CTTTC", "CTXTC", "CTTTC", "GCCCG", 'G', "alloyUltimate", 'C', "plateLead", 'T', new ItemStack(NCItems.parts, 1, 9), 'X', new ItemStack(NCItems.fuel, 1, 140)}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.WRTG, 1), true, new Object[] {" PPP ", "PUUUP", "PUUUP", "PUUUP", " PPP ", 'P', "plateLead", 'U', "U238"}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.steamDecompressor, 2), true, new Object[] {"PPPPP", "PCCCP", "GMMMG", "PCCCP", "PPPPP", 'P', "plateIron", 'C', Blocks.piston, 'G', new ItemStack(NCItems.parts, 1, 10), 'M', new ItemStack(NCItems.parts, 1, 19)}));
-	    	this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.denseSteamDecompressor, 1), true, new Object[] {"PPPPP", "CCCCC", "PPPPP", 'P', "plateAdvanced", 'C', NCBlocks.steamDecompressor}));
-	    	if (NuclearCraft.enableNukes) {
-	    		this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.antimatterBomb, 1), true, new Object[] {"PPPPP", "PAAAP", "PAEAP", "PAAAP", "PPPPP", 'A', NCItems.antimatter, 'P', "plateAdvanced", 'E', NCBlocks.superElectromagnetIdle}));
-	    	}
-    	}
-    	
+        ItemStack circuitAdv = GameRegistry.findItemStack("Mekanism", "ControlCircuit", 1);
+        circuitAdv.setItemDamage(1);
+
+        ItemStack circuitElite = GameRegistry.findItemStack("Mekanism", "ControlCircuit", 1);
+        circuitElite.setItemDamage(2);
+
+        ItemStack circuitUltimate = GameRegistry.findItemStack("Mekanism", "ControlCircuit", 1);
+        circuitUltimate.setItemDamage(3);
+
+        ItemStack electroCoil = GameRegistry.findItemStack("MekanismGenerators", "Generator", 1);
+        electroCoil.setItemDamage(9);
+
+        ItemStack teleportCore = GameRegistry.findItemStack("Mekanism", "TeleportationCore", 1);
+
+        ItemStack casingTurbine = GameRegistry.findItemStack("MekanismGenerators", "Generator", 1);
+        casingTurbine.setItemDamage(10);
+
+        ItemStack turbineValve = GameRegistry.findItemStack("MekanismGenerators", "Generator", 1);
+        turbineValve.setItemDamage(11);
+
+        ItemStack turbineBlade = GameRegistry.findItemStack("MekanismGenerators", "TurbineBlade", 1);
+
+        ItemStack Reactor = GameRegistry.findItemStack("MekanismGenerators", "Reactor", 1);
+
+        recipes = new ArrayList();
+
+        //Reactor Casing
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.reactorBlock, 16), true, new Object[]{"IBBBI", "BCCCB", "BCCCB", "BCCCB", "IBBBI", 'B', "plateBasic", 'I', "ingotSteel", 'C', OreDictionary.doesOreNameExist("blockConcrete") ? "blockConcrete" : new ItemStack(Blocks.clay)}));
+        //Fuel Cell Container
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.cellBlock, 4), true, new Object[]{"IBGBI", "BG GB", "G   G", "BG GB", "IBGBI", 'B', "plateBasic", 'I', "ingotSteel", 'G', new ItemStack(NCBlocks.reactorBlock, 1, 1)}));
+
+        //Empty Reactor Cooler
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.emptyCoolerBlock, 8), true, new Object[]{"IBBBI", "BXXXB", "BXXXB", "BXXXB", "IBBBI", 'B', "plateBasic", 'I', "ingotSteel", 'X', new ItemStack(Blocks.iron_bars, 1)}));
+        //Speed Reactor Block
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.speedBlock, 6), true, new Object[] {" NNN ", "NURUN", "NRURN", "NURUN", " NNN ", 'N', "plateBasic", 'R', Items.blaze_powder, 'U', Items.redstone}));
+
+        //Fission Controller Graphite
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fissionReactorGraphiteIdle, 1), true, new Object[]{"RBGBR", "BECEB", "GCNCG", "BECEB", "RBGBR", 'R', "plateReinforced", 'B', "plateBasic", 'G', "blockGraphite", 'E', "alloyElite", 'C', new ItemStack(NCItems.parts, 1, 18), 'N', new ItemStack(NCBlocks.nuclearFurnaceIdle, 1)}));
+        //Fission Controller Steam
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fissionReactorSteamIdle, 1), true, new Object[]{" CVC ", "CTRTC", "VRFRV", "CTRTC", " CVC ", 'C', casingTurbine, 'T', turbineBlade,'V', turbineValve, 'R', new ItemStack(NCBlocks.emptyCoolerBlock, 8), 'F', new ItemStack(NCBlocks.fissionReactorGraphiteIdle, 1)}));
+
+        //Tubing (Aesthetic)
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.tubing1, 8), true, new Object[] {" NNN ", "NIIIN", " NNN ", 'N', "plateLead", 'I', "plateIron"}));
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.tubing2, 8), true, new Object[] {" N ", "NIN", "NIN", "NIN", " N ", 'N', "plateLead", 'I', "plateIron"}));
+
+        //Electromagnet
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.electromagnetIdle, 8), true, new Object[]{"RBCBR", "BICIB", "CCACC", "BICIB", "RBCBR", 'R', "plateReinforced", 'B', "plateBasic", 'C', new ItemStack(NCItems.parts, 1, 12), 'A', "alloyAdvanced", 'I', "ingotRedAlloy"}));
+        //Fusion Connector
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionConnector, 4), true, new Object[]{"ARIRA", "RSCSR", "ICTCI", "RSCSR", "ARIRA", 'A', "alloyElite", 'R', "plateReinforced", 'I', "ingotElectrumFlux", 'S', "itemSilicon", 'C', new ItemStack(NCItems.parts, 1, 12), 'T', "coilSilver"}));
+        //Fusion Controller
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionReactor, 1), true, new Object[]{"DRFRD", "RUCUR", "FRXRF", "RUCUR", "DRFRD", 'D', "plateDU", 'R', "plateReinforced", 'F', new ItemStack(NCBlocks.fusionConnector, 1), 'U', "alloyUltimate", 'C', new ItemStack(NCItems.parts, 1, 18), 'X', Reactor}));
+
+        //Steam Fusion Controller
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionReactorSteam, 1), true, new Object[]{" CVC ", "CTRTC", "VRFRV", "CTRTC", " CVC ", 'C', casingTurbine, 'T', turbineBlade,'V', turbineValve, 'R', new ItemStack(NCBlocks.emptyCoolerBlock, 8), 'F', new ItemStack(NCBlocks.fusionReactor, 1)}));
+
+        //Synchroton Controller
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.synchrotronIdle, 1), true, new Object[]{"EUUUE", "UACAU", "UCTCU", "UACAU", "EUUUE", 'E', new ItemStack(NCBlocks.superElectromagnetIdle, 1, 3), 'A', "plateAdvanced", 'U', "plateDU", 'C', circuitUltimate, 'T', teleportCore}));
+        //Superconducting Electromagnetic
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.superElectromagnetIdle, 8), true, new Object[]{"ADEDA", "DGEGD", "EEUEE", "DGEGD", "ADEDA", 'A', "plateAdvanced", 'D', "plateDU", 'E', new ItemStack(NCItems.parts, 1, 17), 'G', "ingotRefinedGlowstone", 'U', "alloyUltimate"}));
+        //Electromagnetic Cooler
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.supercoolerIdle, 8), true, new Object[]{"ARTRA", "RLTLR", "TTUTT", "RLTLR", "ARTRA", 'A', "plateAdvanced", 'R', "plateReinforced", 'T', new ItemStack(NCBlocks.reactorBlock, 1, 1), 'L', "ingotRefinedLapis", 'U', "alloyUltimate"}));
+
+        //RTG Uranium
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.WRTG, 1), true, new Object[]{"CPPPC", "PEGEP", "PGXGP", "PEGEP", "CPPPC", 'C', circuitBasic, 'P', "plateBasic", 'E', electroCoil, 'G', "blockGraphite", 'X', new ItemStack(NCItems.fuel, 1, 141)}));
+        //RTG Americium
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.AmRTG, 1), true, new Object[]{"CPPPC", "PEGEP", "PGXGP", "PEGEP", "CPPPC", 'C', circuitAdv, 'P', "plateReinforced", 'E', electroCoil, 'G', "blockGraphite", 'X', new ItemStack(NCItems.fuel, 1, 139)}));
+        //RTG Plutonium
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.RTG, 1), true, new Object[]{"CPPPC", "PEGEP", "PGXGP", "PEGEP", "CPPPC", 'C', circuitElite, 'P', "plateDU", 'E', electroCoil, 'G', "blockGraphite", 'X', new ItemStack(NCItems.fuel, 1, 46)}));
+        //Californium Plutonium
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.CfRTG, 1), true, new Object[]{"CPPPC", "PEGEP", "PGXGP", "PEGEP", "CPPPC", 'C', circuitUltimate, 'P', "plateAdvanced", 'E', electroCoil, 'G', "blockGraphite", 'X', new ItemStack(NCItems.fuel, 1, 140)}));
+
+        if (NuclearCraft.enableNukes)
+            this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.antimatterBomb, 1), true, new Object[] {"PPPPP", "PAAAP", "PAEAP", "PAAAP", "PPPPP", 'A', NCItems.antimatter, 'P', "plateAdvanced", 'E', NCBlocks.superElectromagnetIdle}));
+
         Collections.sort(this.recipes, new NuclearWorkspaceRecipeSorter());
     }
 
     @SuppressWarnings("unchecked")
-	public void addRecipe(IRecipe recipe) {
-    	//NuclearWorkspaceCraftingManager.getInstance().getRecipeList().add(recipe);
-    	this.recipes.add(recipe);
+    public void addRecipe(IRecipe recipe) {
+        //NuclearWorkspaceCraftingManager.getInstance().getRecipeList().add(recipe);
+        this.recipes.add(recipe);
     }
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public NuclearWorkspaceShapedRecipes addRecipe(ItemStack p_92103_1_, Object ... p_92103_2_) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public NuclearWorkspaceShapedRecipes addRecipe(ItemStack p_92103_1_, Object ... p_92103_2_) {
         String s = "";
         int i = 0;
         int j = 0;
@@ -152,7 +181,7 @@ public class NuclearWorkspaceCraftingManager {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-	public NuclearWorkspaceShapelessRecipes addShapelessRecipe(ItemStack p_77596_1_, Object ... p_77596_2_) {
+    public NuclearWorkspaceShapelessRecipes addShapelessRecipe(ItemStack p_77596_1_, Object ... p_77596_2_) {
         ArrayList arraylist = new ArrayList();
         Object[] aobject = p_77596_2_;
         int i = p_77596_2_.length;
@@ -228,7 +257,7 @@ public class NuclearWorkspaceCraftingManager {
      * returns the List<> of all recipes
      */
     @SuppressWarnings("rawtypes")
-	public List getRecipeList() {
+    public List getRecipeList() {
         return this.recipes;
     }
 }

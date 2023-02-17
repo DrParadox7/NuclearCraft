@@ -9,20 +9,7 @@ import nc.entity.EntityNuclearMonster;
 import nc.entity.EntityNukePrimed;
 import nc.item.NCItems;
 import nc.model.ModelNuclearMonster;
-import nc.render.ItemRenderFusionReactor;
-import nc.render.ItemRenderFusionReactorSteam;
-import nc.render.ItemRenderNuclearWorkspace;
-import nc.render.ItemRenderTubing1;
-import nc.render.ItemRenderTubing2;
-import nc.render.RenderAntimatterBombPrimed;
-import nc.render.RenderEMPPrimed;
-import nc.render.RenderFusionReactor;
-import nc.render.RenderFusionReactorSteam;
-import nc.render.RenderNuclearMonster;
-import nc.render.RenderNuclearWorkspace;
-import nc.render.RenderNukePrimed;
-import nc.render.RenderTubing1;
-import nc.render.RenderTubing2;
+import nc.render.*;
 import nc.tile.crafting.TileNuclearWorkspace;
 import nc.tile.generator.TileFusionReactor;
 import nc.tile.generator.TileFusionReactorSteam;
@@ -87,6 +74,9 @@ public void registerRenderThings() {
 
 	//Entities
 	RenderingRegistry.registerEntityRenderingHandler(EntityNuclearMonster.class, new RenderNuclearMonster(new ModelNuclearMonster(), 0.3F));
+
+	//Gases
+	NuclearcraftRenderer.init();
 }
 	@Override
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
