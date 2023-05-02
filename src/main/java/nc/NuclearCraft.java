@@ -1226,7 +1226,7 @@ public class NuclearCraft {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 4, 6), new Object[] {"ingotCopper", "ingotCopper", "ingotCopper", "ingotTin"}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 4, 21), new Object[] {"dustCopper", "dustCopper", "dustCopper", "dustTin"}));
 
-			//Magnesium Diborite - Ingot + Dust
+			//Magnesium Diboride - Ingot + Dust
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 3, 71), new Object[] {"ingotMagnesium", "ingotBoron", "ingotBoron"}));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(NCItems.material, 3, 72), new Object[] {"dustMagnesium", "dustBoron", "dustBoron"}));
 
@@ -1416,7 +1416,7 @@ public class NuclearCraft {
 			//Copper Coil
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 4, 12), new Object[] {"III", "AAA", "III", 'I', "ingotCopper", 'A', enrichedAlloy}));
 			//Magnesium Coil
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 4, 17), new Object[] {"III", "AAA", "III", 'I', "ingotMagnesiumDiborite", 'A', reinforcedAlloy}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 4, 17), new Object[] {"III", "AAA", "III", 'I', "ingotMagnesiumDiboride", 'A', reinforcedAlloy}));
 
 		// Other Shapeless Recipes
 			//Universal Reactant
@@ -1499,7 +1499,7 @@ public class NuclearCraft {
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 51), new ItemStack(NCItems.material, 1, 50), 0.0F);
 			//Uranium Oxide Dust -> Uranium Oxide Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 54), new ItemStack(NCItems.material, 1, 53), 0.0F);
-			//Magnesium Diborite Dust -> Magnesium Diborite Ingot
+			//Magnesium Diboride Dust -> Magnesium Diboride Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 72), new ItemStack(NCItems.material, 1, 71), 0.0F);
 			//Graphite Dust -> Graphite Ingot
 		GameRegistry.addSmelting(new ItemStack(NCItems.material, 1, 77), new ItemStack(NCItems.material, 1, 76), 0.0F);
