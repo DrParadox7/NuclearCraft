@@ -75,9 +75,9 @@ public class NuclearWorkspaceCraftingManager {
         this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.speedBlock, 6), true, new Object[] {" NNN ", "NURUN", "NRURN", "NURUN", " NNN ", 'N', "plateBasic", 'R', Items.blaze_powder, 'U', Items.redstone}));
 
         //Fission Controller Graphite
-        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fissionReactorGraphiteIdle, 1), true, new Object[]{"RBGBR", "BECEB", "GCNCG", "BECEB", "RBGBR", 'R', "plateReinforced", 'B', "plateBasic", 'G', "blockGraphite", 'E', "alloyElite", 'C', new ItemStack(NCItems.parts, 1, 18), 'N', new ItemStack(NCBlocks.nuclearFurnaceIdle, 1)}));
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fissionReactorGraphiteIdle, 1), true, new Object[]{"RBGBR", "BECEB", "GCNCG", "BECEB", "RBGBR", 'R', "plateReinforced", 'B', "plateBasic", 'G', "blockGraphite", 'E', "alloyElite", 'C', new ItemStack(NCItems.parts, 1, 18), 'N', NCBlocks.nuclearFurnaceIdle}));
         //Fission Controller Steam
-        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fissionReactorSteamIdle, 1), true, new Object[]{" CVC ", "CTRTC", "VRFRV", "CTRTC", " CVC ", 'C', casingTurbine, 'T', turbineBlade,'V', turbineValve, 'R', new ItemStack(NCBlocks.emptyCoolerBlock, 8), 'F', new ItemStack(NCBlocks.fissionReactorGraphiteIdle, 1)}));
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fissionReactorSteamIdle, 1), true, new Object[]{" CVC ", "CTRTC", "VRFRV", "CTRTC", " CVC ", 'C', casingTurbine, 'T', turbineBlade,'V', turbineValve, 'R', NCBlocks.emptyCoolerBlock, 'F', NCBlocks.fissionReactorGraphiteIdle}));
 
         //Tubing (Aesthetic)
         this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.tubing1, 8), true, new Object[] {" NNN ", "NIIIN", " NNN ", 'N', "plateLead", 'I', "plateIron"}));
@@ -88,13 +88,13 @@ public class NuclearWorkspaceCraftingManager {
         //Fusion Connector
         this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionConnector, 4), true, new Object[]{"ARIRA", "RSCSR", "ICTCI", "RSCSR", "ARIRA", 'A', "alloyElite", 'R', "plateReinforced", 'I', "ingotElectrumFlux", 'S', "itemSilicon", 'C', new ItemStack(NCItems.parts, 1, 12), 'T', "coilSilver"}));
         //Fusion Controller
-        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionReactor, 1), true, new Object[]{"DRFRD", "RUCUR", "FRXRF", "RUCUR", "DRFRD", 'D', "plateDU", 'R', "plateReinforced", 'F', new ItemStack(NCBlocks.fusionConnector, 1), 'U', "alloyUltimate", 'C', new ItemStack(NCItems.parts, 1, 18), 'X', Reactor}));
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionReactor, 1), true, new Object[]{"DRFRD", "RUCUR", "FRXRF", "RUCUR", "DRFRD", 'D', "plateDU", 'R', "plateReinforced", 'F', NCBlocks.fusionConnector, 'U', "alloyUltimate", 'C', new ItemStack(NCItems.parts, 1, 18), 'X', Reactor}));
 
         //Steam Fusion Controller
-        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionReactorSteam, 1), true, new Object[]{" CVC ", "CTRTC", "VRFRV", "CTRTC", " CVC ", 'C', casingTurbine, 'T', turbineBlade,'V', turbineValve, 'R', new ItemStack(NCBlocks.emptyCoolerBlock, 8), 'F', new ItemStack(NCBlocks.fusionReactor, 1)}));
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.fusionReactorSteam, 1), true, new Object[]{" CVC ", "CTRTC", "VRFRV", "CTRTC", " CVC ", 'C', casingTurbine, 'T', turbineBlade,'V', turbineValve, 'R', NCBlocks.emptyCoolerBlock, 'F', NCBlocks.fusionReactor}));
 
         //Synchroton Controller
-        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.synchrotronIdle, 1), true, new Object[]{"EUUUE", "UACAU", "UCTCU", "UACAU", "EUUUE", 'E', new ItemStack(NCBlocks.superElectromagnetIdle, 1, 3), 'A', "plateAdvanced", 'U', "plateDU", 'C', circuitUltimate, 'T', teleportCore}));
+        this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.synchrotronIdle, 1), true, new Object[]{"EUUUE", "UACAU", "UCTCU", "UACAU", "EUUUE", 'E', NCBlocks.superElectromagnetIdle, 'A', "plateAdvanced", 'U', "plateDU", 'C', circuitUltimate, 'T', teleportCore}));
         //Superconducting Electromagnetic
         this.addRecipe(new NuclearWorkspaceShapedOreRecipe(new ItemStack(NCBlocks.superElectromagnetIdle, 8), true, new Object[]{"ADEDA", "DGEGD", "EEUEE", "DGEGD", "ADEDA", 'A', "plateAdvanced", 'D', "plateDU", 'E', new ItemStack(NCItems.parts, 1, 17), 'G', "ingotRefinedGlowstone", 'U', "alloyUltimate"}));
         //Electromagnetic Cooler
