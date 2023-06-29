@@ -1380,7 +1380,7 @@ public class NuclearCraft {
 
 
 			//Basic Plating
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 4, 0), new Object[] {"PLP", "LGL", "PLP", 'P', polyethenePlate, 'L', "ingotLead", 'G', "dustGraphite"}));
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 8, 0), new Object[] {"PLP", "LGL", "PLP", 'P', polyethenePlate, 'L', "ingotLead", 'G', "dustGraphite"}));
 			//Computer Plating
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(NCItems.parts, 2, 18), new Object[] {"SCS", "IRI", "SCS", 'S', "itemSilicon", 'C', advControlCircuit, 'R', "plateReinforced", 'I', "ingotGold"}));
 
@@ -1392,6 +1392,8 @@ public class NuclearCraft {
 		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.ioniserIdle, new Object[] {"BDB", "GMG", "BCB",'B', "plateBasic",'D', new ItemStack(NCItems.parts, 1, 17), 'G', "gearSignalum", 'M', machineCasing, 'C', "coilGold"}));
 			//Helium Liquifier
 		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.coolerIdle, new Object[] {"BKB", "GMG", "BCB",'B', "plateBasic",'K', new ItemStack(NCBlocks.cryotheumCoolerBlock, 1, 0), 'G', "gearBronze", 'M', machineCasing, 'C', "coilGold"}));
+			//Helium Collector
+		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.collectorIdle, new Object[] {"BTB", "TXT", "BTB",'B', "plateAdvanced",'T', new ItemStack(NCBlocks.blockBlock, 1, 5), 'X', new ItemStack(Blocks.iron_bars)}));
 			//Recycler
 		GameRegistry.addRecipe(new ShapedOreRecipe(NCBlocks.recyclerIdle, new Object[] {"BEB", "GMG", "BCB",'B', "plateBasic",'E', elecroCore, 'G', "gearEnderium", 'M', machineCasing, 'C', "coilGold"}));
 			//Steam Decompressor

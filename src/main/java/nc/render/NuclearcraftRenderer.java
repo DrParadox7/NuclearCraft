@@ -2,12 +2,10 @@ package nc.render;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import mekanism.api.gas.GasRegistry;
-import mekanism.client.render.MekanismRenderer;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 public class NuclearcraftRenderer {
-
     public static void init()
     {
         MinecraftForge.EVENT_BUS.register(new NuclearcraftRenderer());
