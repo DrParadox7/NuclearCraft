@@ -31,8 +31,6 @@ public class ClientProxy extends CommonProxy {
 	
 public void registerRenderThings() {
 
-	System.out.println("----------------------------------------------------registering renderstuff");
-
 	//connected textures handler
 	ISimpleBlockRenderingHandler connectedTextureHandler = new CTMRenderer(RenderingRegistry.getNextAvailableRenderId());
 	NuclearCraft.connectedRenderID = connectedTextureHandler.getRenderId();

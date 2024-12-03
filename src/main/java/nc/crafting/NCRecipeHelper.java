@@ -343,7 +343,6 @@ public abstract class NCRecipeHelper {
 	}
 
 	private boolean equalStack(ItemStack stack, ItemStack key, boolean checkSize) {
-		//System.out.print(stack.stackSize >= stack.stackSize);
 		return stack.getItem() == key.getItem()
 				&& (stack.getItemDamage() == key.getItemDamage())
 				&& (!checkSize || key.stackSize <= stack.stackSize);

@@ -41,7 +41,6 @@ public class TileFissionReactorProxy extends TileEntity implements IEnergyHandle
         if(this.realTileEntity instanceof TileFissionReactor){
             this.realTileEntityFissionReactor = (TileFissionReactor) this.realTileEntity;
         }else if(this.realTileEntity instanceof TileFissionReactorSteam){
-            System.out.println("setting up steam");
             this.realTileEntityFissionReactorSteam = (TileFissionReactorSteam) this.realTileEntity;
         }
     }
