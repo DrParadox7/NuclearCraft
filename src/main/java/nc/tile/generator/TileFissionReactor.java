@@ -149,9 +149,16 @@ public class TileFissionReactor extends TileGeneratorInventory {
     private void addEnergyFromProxies() {
         for (TileFissionReactorProxy proxy: proxies) {
             for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-                TileEntity tile = worldObj.getTileEntity(proxy.xCoord + side.offsetX, proxy.yCoord + side.offsetY, proxy.zCoord + side.offsetZ);
-                if (tile instanceof IEnergyReceiver) {
-                    storage.extractEnergy(((IEnergyReceiver)tile).receiveEnergy(side.getOpposite(), storage.extractEnergy(storage.getMaxEnergyStored(), true), false), false);
+
+                int tileCoordX = proxy.xCoord + side.offsetX;
+                int tileCoordY = proxy.yCoord + side.offsetY;
+                int tileCoordZ = proxy.zCoord + side.offsetZ;
+
+                if (worldObj.blockExists(tileCoordX, tileCoordY, tileCoordZ)) {
+                    TileEntity tile = worldObj.getTileEntity(tileCoordX, tileCoordY, tileCoordZ);
+                    if (tile instanceof IEnergyReceiver) {
+                        storage.extractEnergy(((IEnergyReceiver) tile).receiveEnergy(side.getOpposite(), storage.extractEnergy(storage.getMaxEnergyStored(), true), false), false);
+                    }
                 }
             }
         }
